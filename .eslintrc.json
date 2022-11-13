@@ -16,6 +16,6 @@
         "checkContextTypes": true,
         "checkChildContextTypes": true
       }
-    ],
+    ]
   }
 }
