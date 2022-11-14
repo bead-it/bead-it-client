@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   position: absolute;
 
   right: 1vw;
-  top: 10vh;
+  top: 15vh;
 
   display: ${props => (props.modalOpen ? 'flex' : 'none')};
   flex-direction: column;
@@ -28,4 +28,11 @@ const Wrapper = styled.div`
   align-items: center;
 
   background-color: gray;
+
+  @media (max-width: 767px) {
+    width: 98vw;
+    height: 90vh;
+
+    top: 105vh;
+  }
 `;

@@ -2,13 +2,14 @@ import React from 'react';
 import Head from 'next/head';
 import { RecoilRoot } from 'recoil';
 import PropTypes from 'prop-types';
+
 import GlobalStyle from '../components/shared/globalstyle';
 
 function MyApp({ Component, pageProps }) {
   return (
     <RecoilRoot>
       <Head>
-        <title>비드잇</title>
+        <title>비딧</title>
         <meta property="keywords" content="구슬 만들기, 지식 공유" />
         <meta
           property="description"

@@ -1,6 +1,11 @@
 import { atom } from 'recoil';
 import { v4 } from 'uuid';
 
+const deviceSize = atom({
+  key: `deviceSize/${v4()}`,
+  default: 'large',
+});
+
 const profileModal = atom({
   key: `profileModal/${v4()}`,
   default: false,
@@ -16,4 +21,4 @@ const userInfo = atom({
   default: {},
 });
 
-export { profileModal, realViewModal, userInfo };
+export { deviceSize, profileModal, realViewModal, userInfo };
