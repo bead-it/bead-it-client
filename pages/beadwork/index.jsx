@@ -2,22 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
+import BeadworkTable from '../../components/beadworktable';
+import RealViewModal from '../../components/modals/realviewmodal';
+import { profileModal, realViewModal } from '../../store/states';
 
-import { profileModal } from '../store/states';
-
-export default function Home() {
+export default function Beadwork() {
   const setProfileModal = useSetRecoilState(profileModal);
+  const setRealViewModal = useSetRecoilState(realViewModal);
 
   const closeModals = e => {
     e.stopPropagation();
     setProfileModal(false);
+    setRealViewModal(false);
   };
 
   return (
     <Wrapper onClick={closeModals}>
       <Navbar />
-      <Welcome>Welcome to Beadit!</Welcome>
+      <BeadworkTable />
+      <RealViewModal />
     </Wrapper>
   );
 }
@@ -29,16 +33,7 @@ const Wrapper = styled.div`
   align-items: center;
 
   width: 98vw;
-  height: 98vh;
 
   padding-left: 1vw;
   padding-top: 1vh;
-`;
-
-const Welcome = styled.div`
-  width: 100vw;
-  height: 50vh;
-
-  font-size: xx-large;
-  text-align: center;
 `;

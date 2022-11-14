@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "pre-commit": "lint-staged && rm -rf .git/hooks && ln -s ../.husky .git/hooks",
-    "prepare": "'npm run pre-commit'"
+    "prepare": "npm run pre-commit"
   },
   "lint-staged": {
     "**/*.{js, jsx, html, css, json}": [
@@ -28,6 +28,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
+    "react-responsive": "^9.0.0",
     "recoil": "^0.7.6",
     "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
