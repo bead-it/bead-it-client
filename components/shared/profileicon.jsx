@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useSetRecoilState } from 'recoil';
@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil';
 import PROFILE_SIZE from '../constants/profileicon';
 import { profileModal } from '../../store/states';
 
-export default function ProfileIcon({ src, alt, size }, ref) {
+const ProfileIcon = forwardRef(({ src, alt, size }, ref) => {
   const setModalOpen = useSetRecoilState(profileModal);
 
   const profileModalControl = e => {
@@ -25,13 +25,15 @@ export default function ProfileIcon({ src, alt, size }, ref) {
       onClick={profileModalControl}
     />
   );
-}
+});
 
 ProfileIcon.propTypes = {
   src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
   size: PropTypes.string.isRequired,
 };
+
+export default ProfileIcon;
 
 const Icon = styled.img`
   width: ${props => PROFILE_SIZE[props.size]}px;

@@ -1,12 +1,10 @@
-import React, { useRef, forwardRef } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import Image from 'next/image';
 import ProfileIcon from '../shared/profileicon';
 import ProfileModal from '../modals/profilemodal';
-
-const ProfileIconForwarededRef = forwardRef(ProfileIcon);
 
 export default function Navbar({ title }) {
   const profileIconRef = useRef(null);
@@ -30,7 +28,7 @@ export default function Navbar({ title }) {
             alt="Google login"
           />
         ) : (
-          <ProfileIconForwarededRef
+          <ProfileIcon
             ref={profileIconRef}
             src="/images/bead-it-logo.png"
             alt="profile image"
@@ -61,6 +59,8 @@ const Wrapper = styled.div`
   height: 80px;
 
   background-color: #e1b8aa;
+
+  z-index: 1;
 `;
 
 const LeftBuffer = styled.div`
@@ -89,5 +89,5 @@ const RightBuffer = styled.div`
 `;
 
 const Login = styled.img`
-  width: 200px;
+  width: 150px;
 `;
