@@ -5,7 +5,7 @@ import { useSetRecoilState } from 'recoil';
 import Navbar from '../../components/navbar';
 import BeadworkTable from '../../components/beadworktable';
 import RealViewModal from '../../components/modals/realviewmodal';
-import { profileModal, realViewModal } from '../../store/states';
+import { profileModal, realViewModal } from '../../recoilstore/atoms';
 
 export default function Beadwork() {
   const setProfileModal = useSetRecoilState(profileModal);

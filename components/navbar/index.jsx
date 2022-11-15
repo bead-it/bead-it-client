@@ -6,7 +6,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import ProfileIcon from '../shared/profileicon';
 import ProfileModal from '../modals/profilemodal';
-import { deviceSize } from '../../store/states';
+import { deviceSize } from '../../recoilstore/atoms';
 
 export default function Navbar({ title }) {
   const profileIconRef = useRef(null);
@@ -109,5 +109,6 @@ const RightBuffer = styled.div`
 `;
 
 const Login = styled.img`
-  width: 90%;
+  max-width: 90%;
+  max-height: 90%;
 `;

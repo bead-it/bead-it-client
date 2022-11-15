@@ -4,7 +4,7 @@ import { useSetRecoilState } from 'recoil';
 
 import Navbar from '../components/navbar';
 
-import { profileModal } from '../store/states';
+import { profileModal } from '../recoilstore/atoms';
 
 export default function Home() {
   const setProfileModal = useSetRecoilState(profileModal);

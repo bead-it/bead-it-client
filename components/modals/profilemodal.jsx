@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useRecoilValue } from 'recoil';
 
-import { profileModal } from '../../store/states';
+import { profileModal } from '../../recoilstore/atoms';
 
 export default function ProfileModal({ profileIconRef }) {
   const modalOpen = useRecoilValue(profileModal);
