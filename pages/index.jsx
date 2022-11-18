@@ -1,17 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 
 import Navbar from '../components/navbar';
 
 import { profileModal } from '../recoilstore/atoms';
+import { userInfo } from '../recoilstore/seletors';
 
 export default function Home() {
   const setProfileModal = useSetRecoilState(profileModal);
+  const user = useRecoilValue(userInfo);
 
   const closeModals = e => {
     e.stopPropagation();
     setProfileModal(false);
+    console.log(user);
   };
 
   return (

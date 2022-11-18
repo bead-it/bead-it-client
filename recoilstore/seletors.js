@@ -1,6 +1,7 @@
 import { selector } from 'recoil';
 import { v4 } from 'uuid';
-import { beadsReceived, threadsReceived } from './atoms';
+import jwt from 'jsonwebtoken';
+import { beadsReceived, threadsReceived, token } from './atoms';
 import beadingFunction from '../utils/beading';
 
 const beadsData = selector({
@@ -43,4 +44,26 @@ const beading = selector({
   },
 });
 
-export { beadsData, threadsData, beading };
+const userInfo = selector({
+  key: `userInfo/${v4()}`,
+  get: ({ get }) => {
+    const newToken = get(token);
+    console.log('refresh token!!');
+
+    if (newToken) {
+      console.log('new token!!');
+      try {
+        const user = jwt.verify(newToken, process.env.SECRET_KEY);
+        return user;
+      } catch (error) {
+        console.error(error);
+        return {};
+      }
+    } else {
+      console.log('no token!!');
+      return {};
+    }
+  },
+});
+
+export { beadsData, threadsData, beading, userInfo };

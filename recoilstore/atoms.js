@@ -19,9 +19,9 @@ const realViewModal = atom({
   default: true,
 });
 
-const userInfo = atom({
-  key: `userInfo/${v4()}`,
-  default: {},
+const token = atom({
+  key: `token/${v4()}`,
+  default: '',
 });
 
 const beadsReceived = atom({
@@ -38,7 +38,7 @@ export {
   deviceSize,
   profileModal,
   realViewModal,
-  userInfo,
+  token,
   beadsReceived,
   threadsReceived,
 };
