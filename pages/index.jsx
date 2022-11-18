@@ -11,7 +11,7 @@ export default function Home() {
   const setProfileModal = useSetRecoilState(profileModal);
   const user = useRecoilValue(userInfo);
 
-  const closeModals = e => {
+  const closeModals = async e => {
     e.stopPropagation();
     setProfileModal(false);
     console.log(user);

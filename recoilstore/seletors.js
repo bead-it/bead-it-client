@@ -1,8 +1,8 @@
 import { selector } from 'recoil';
 import { v4 } from 'uuid';
 import jwt from 'jsonwebtoken';
-import { beadsReceived, threadsReceived, token } from './atoms';
-import beadingFunction from '../utils/beading';
+import { beadsReceived, threadsReceived, tokenInfo } from './atoms';
+import doBeading from '../utils/beading';
 
 const beadsData = selector({
   key: `beadsData/${v4()}`,
@@ -39,15 +39,16 @@ const beading = selector({
   get: ({ get }) => {
     const beads = get(beadsReceived);
     const threads = get(threadsReceived);
+    const beadsInfo = doBeading(beads, threads);
 
-    return beadingFunction(beads, threads);
+    return beadsInfo;
   },
 });
 
 const userInfo = selector({
   key: `userInfo/${v4()}`,
   get: ({ get }) => {
-    const newToken = get(token);
+    const newToken = get(tokenInfo);
     console.log('refresh token!!');
 
     if (newToken) {

@@ -1,7 +1,7 @@
 import pickRandomColor from './pickrandomcolor';
 import beadSvg from '../constants/beadsvg';
 
-const beading = (beads, threads) => {
+const prepareBeads = (beads, threads) => {
   const startPoints = new Set(
     beads.map(bead => {
       const { _id: tempId } = bead;
@@ -86,7 +86,7 @@ const beading = (beads, threads) => {
         const newCy = currentPosition.cy - Math.sin(currentAngle) * 200;
 
         beadsInfo.push({
-          id: beadId,
+          id: `id${beadId}`,
           ...beadSvg.circle,
           cx: newCx,
           cy: newCy,
@@ -104,7 +104,7 @@ const beading = (beads, threads) => {
     }
   }
 
-  return { beadsInfo };
+  return beadsInfo;
 };
 
-export default beading;
+export default prepareBeads;

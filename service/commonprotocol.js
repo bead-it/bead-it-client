@@ -11,8 +11,16 @@ const responseHandler = response => {
   return received;
 };
 
-// const errorHandler = () => {};
+const errorHandler = error => {
+  if (error.response) {
+    const received = error.response.data;
 
-API.interceptors.response.use(responseHandler);
+    return received;
+  }
+
+  throw new Error(error);
+};
+
+API.interceptors.response.use(responseHandler, errorHandler);
 
 export default API;

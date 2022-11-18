@@ -3,7 +3,7 @@ import { deleteCookie, setCookie } from 'cookies-next';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import API from './commonprotocol';
-import errorHandler from '../utils/errorhandler';
+import apiErrorHandler from './apierrorhandler';
 
 const login = async () => {
   try {
@@ -14,7 +14,7 @@ const login = async () => {
     const { _tokenResponse: token } = signInResult;
     const { oauthIdToken: idToken, oauthAccessToken: accessToken } = token;
 
-    const loginResponse = await errorHandler(async () => {
+    const loginResponse = await apiErrorHandler(async () => {
       const response = await API({
         method: 'post',
         url: '/login',
@@ -36,6 +36,10 @@ const login = async () => {
 
     return true;
   } catch (error) {
+    error.message = `Error in LOGIN process${
+      process.env.NODE_ENV === 'development' ? ` : ${error.message}` : ''
+    }.`;
+    error.status = 500;
     console.error(error);
 
     return false;

@@ -1,7 +1,6 @@
 import COLOR from '../constants/colors';
 
 const beadColors = [
-  'pink',
   'red',
   'blue',
   'darkBlue',
