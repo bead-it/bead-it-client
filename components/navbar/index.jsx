@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
+import { useRouter } from 'next/router';
 
 import ProfileIcon from '../shared/profileicon';
 import ProfileModal from '../modals/profilemodal';
-import { deviceSize } from '../../store/states';
+import { deviceSize, token } from '../../recoilstore/atoms';
+import { userInfo } from '../../recoilstore/seletors';
+import { login } from '../../service/auth';
+import refreshUser from '../../utils/refreshuser';
 
 export default function Navbar({ title }) {
+  const router = useRouter();
   const profileIconRef = useRef(null);
 
   const [deviceWindowSize, setDeviceWindowSize] = useRecoilState(deviceSize);
+  const setToken = useSetRecoilState(token);
+  const user = useRecoilValue(userInfo);
   const [loginUrl, setLoginUrl] = useState(
     `/images/google-signin-${deviceWindowSize}.png`,
   );
@@ -34,15 +41,34 @@ export default function Navbar({ title }) {
     setLoginUrl(`/images/google-signin-${deviceWindowSize}.png`);
   }, [deviceWindowSize]);
 
+  const loginHandler = async () => {
+    const loginResult = await login();
+
+    refreshUser(setToken);
+
+    if (!loginResult) {
+      window.alert('Login failed!!');
+    }
+  };
+
+  const routingHome = e => {
+    e.stopPropagation();
+    router.push('/');
+  };
+
   return (
     <Wrapper>
-      <LeftBuffer>
-        <Logo src="/images/bead-it-logo.png" alt="bead-it-logo" />
+      <LeftBuffer poin>
+        <Logo
+          onClick={routingHome}
+          src="/images/bead-it-logo.png"
+          alt="bead-it-logo"
+        />
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
-        {true ? (
-          <Login src={loginUrl} alt="Google login" />
+        {!user.id ? (
+          <Login src={loginUrl} alt="Google login" onClick={loginHandler} />
         ) : (
           <ProfileIcon
             ref={profileIconRef}
@@ -109,5 +135,6 @@ const RightBuffer = styled.div`
 `;
 
 const Login = styled.img`
-  width: 90%;
+  max-width: 90%;
+  max-height: 90%;
 `;

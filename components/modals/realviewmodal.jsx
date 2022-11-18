@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import { realViewModal } from '../../store/states';
+import { realViewModal } from '../../recoilstore/atoms';
 
 export default function RealViewModal() {
   const modalOpen = useRecoilValue(realViewModal);

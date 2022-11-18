@@ -16,6 +16,7 @@
         "checkContextTypes": true,
         "checkChildContextTypes": true
       }
-    ]
+    ],
+    "camelcase": ["error", { "allow": ["useRecoilRefresher_UNSTABLE"] }]
   }
 }

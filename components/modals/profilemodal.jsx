@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { profileModal } from '../../store/states';
+import { profileModal, token } from '../../recoilstore/atoms';
+import { logout } from '../../service/auth';
+import refreshUser from '../../utils/refreshuser';
 
 export default function ProfileModal({ profileIconRef }) {
+  const router = useRouter();
   const modalOpen = useRecoilValue(profileModal);
   const [position, setPosition] = useState({});
+  const setToken = useSetRecoilState(token);
 
   useEffect(() => {
     if (profileIconRef && profileIconRef.current) {
@@ -22,11 +27,21 @@ export default function ProfileModal({ profileIconRef }) {
     }
   }, [profileIconRef]);
 
+  const logoutHandler = async () => {
+    await logout();
+
+    refreshUser(setToken);
+
+    router.push('/');
+  };
+
   return (
     <Wrapper position={position} modalOpen={modalOpen}>
       <div>My page</div>
       <hr />
-      <div>Sign out</div>
+      <Logout type="button" onClick={logoutHandler}>
+        Sign out
+      </Logout>
     </Wrapper>
   );
 }
@@ -54,5 +69,13 @@ const Wrapper = styled.div`
     width: 80%;
     border: none;
     border-top: 2px dashed black;
+  }
+`;
+
+const Logout = styled.div`
+  &:hover {
+    cursor: pointer;
+    background-color: gray;
+    transform: scale(1.02);
   }
 `;
