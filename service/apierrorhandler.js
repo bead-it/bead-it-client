@@ -1,5 +1,5 @@
 import { deleteCookie } from 'cookies-next';
-import refreshUser from '../utils/refreshuser';
+import refreshUser from '../utils/authutil/refreshuser';
 
 const apiErrorHandler = async (
   apiExecFunc,

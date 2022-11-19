@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
 import Navbar from '../../components/navbar';
-import { profileModal } from '../../recoilstore/atoms';
+import { profileModalAtom } from '../../recoilstore/atoms';
 
 export default function Mypage() {
-  const setProfileModal = useSetRecoilState(profileModal);
+  const setProfileModal = useSetRecoilState(profileModalAtom);
 
   const closeModals = e => {
     e.stopPropagation();

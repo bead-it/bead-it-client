@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 const zoomPanning = () => {
-  const group = d3.select('g');
+  const group = d3.selectAll('g');
 
   const handleZoom = e => group.attr('transform', e.transform);
 

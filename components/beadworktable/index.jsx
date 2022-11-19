@@ -3,106 +3,152 @@ import styled from 'styled-components';
 import * as d3 from 'd3';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import zoomPanning from '../../utils/zoompanning';
-import { beading, beadsData } from '../../recoilstore/seletors';
+import zoomPanning from '../../utils/d3datautil/zoompanning';
+import {
+  beadingGroupSel,
+  beadsMapSel,
+  threadsGroupSel,
+} from '../../recoilstore/seletors';
 
 import COLOR from '../../constants/colors';
 import {
-  currentBead,
-  realViewModal,
-  threadsReceived,
+  beadShapeAtom,
+  currentBeadAtom,
+  realViewModalAtom,
 } from '../../recoilstore/atoms';
 
 export default function BeadworkTable() {
-  const beadingData = useRecoilValue(beading);
-  const beadsObjectData = useRecoilValue(beadsData);
-  const threadsRawData = useRecoilValue(threadsReceived);
-  const setCurrentBead = useSetRecoilState(currentBead);
-  const setRealViewModal = useSetRecoilState(realViewModal);
+  const beadingGroupData = useRecoilValue(beadingGroupSel);
+  const beadsMap = useRecoilValue(beadsMapSel);
+  const threadsGroup = useRecoilValue(threadsGroupSel);
+  const setCurrentBead = useSetRecoilState(currentBeadAtom);
+  const setRealViewModal = useSetRecoilState(realViewModalAtom);
+  const beadShape = useRecoilValue(beadShapeAtom);
 
   useEffect(() => {
-    console.log(beadingData);
-    console.log(beadsObjectData);
-  }, [beadingData, beadsObjectData]);
+    console.log(beadingGroupData);
+    console.log(beadsMap);
+  }, [beadingGroupData, beadsMap]);
 
   useEffect(() => {
-    const svg = d3
-      .select('.canvas')
+    d3.select('.canvas')
       .append('svg')
       .attr('width', '100%')
-      .attr('height', '100%');
-
-    svg.append('g');
+      .attr('height', '100%')
+      .append('g')
+      .attr('id', 'topGroup');
   }, []);
 
   useEffect(() => {
-    const beads = d3.select('g').selectAll('circle').data(beadingData);
-    beads
-      .join('circle')
+    const beadsGroups = d3
+      .select('#topGroup')
+      .selectAll('g')
+      .data(Object.values(beadingGroupData));
+    beadsGroups
+      .join('g')
       .attr('id', d => d.id)
-      .attr('cx', d => d.cx)
-      .attr('cy', d => d.cy)
-      .attr('r', d => d.r)
-      .attr('fill', d => d.fill)
-      .attr('stroke', d => d.stroke)
-      .attr('stroke-width', d => d['stroke-width']);
-  }, [beadingData]);
+      .append('text')
+      .text(d => d.domain)
+      .attr('x', d => d.x)
+      .attr('y', d => d.y);
+  }, [beadingGroupData]);
+
+  useEffect(() => {
+    Object.values(beadingGroupData).forEach(group => {
+      const beads = d3
+        .select(`#${group.id}`)
+        .selectAll(beadShape)
+        .data(group.beads);
+      beads
+        .join(beadShape)
+        .attr('id', d => d.id)
+        .attr('cx', d => d.beadX)
+        .attr('cy', d => d.beadY)
+        .attr('r', d => d.r)
+        .attr('fill', d => d.fill)
+        .attr('stroke', d => d.stroke)
+        .attr('stroke-width', d => d['stroke-width']);
+    });
+  }, [beadingGroupData, beadShape]);
 
   useEffect(() => {
     const link = d3
       .linkHorizontal()
       .source(d => {
-        const { _id: sourceId } = beadsObjectData[d.source];
-        const source = d3.select(`#id${sourceId}`);
-        return [Number(source.attr('cx')), Number(source.attr('cy'))];
+        const sourceGroup = beadingGroupData[d.source];
+        return [sourceGroup.x, sourceGroup.y];
       })
       .target(d => {
-        const { _id: targetId } = beadsObjectData[d.target];
-        const target = d3.select(`#id${targetId}`);
-        return [Number(target.attr('cx')), Number(target.attr('cy'))];
+        const targetGroup = beadingGroupData[d.target];
+        return [targetGroup.x, targetGroup.y];
       });
 
-    const threads = d3.select('g').selectAll('path').data(threadsRawData);
+    const threads = d3.select('g').selectAll('path').data(threadsGroup);
     threads
       .join('path')
       .attr('d', link)
       .attr('id', d => {
-        const { _id: threadId } = d;
-        return threadId;
+        return d.id;
       })
       .attr('stroke', COLOR.gray)
       .attr('fill', 'none')
       .attr('stroke-width', '10');
-  }, [beadsObjectData, threadsRawData]);
+  }, [beadingGroupData, threadsGroup]);
 
   useEffect(() => {
-    d3.select('g')
-      .selectAll('circle, path')
+    d3.select('#topGroup')
+      .selectAll('g, path')
       .datum((d, i, nodes) => nodes[i].nodeName)
       .sort((a, b) => {
         if (a === b) {
           return 0;
         }
-        if (a === 'circle') {
+        if (a === 'g') {
           return 1;
         }
+
         return -1;
       });
-  }, [beadingData, beadsObjectData, threadsRawData]);
+
+    d3.select('#topGroup')
+      .selectAll('g')
+      .selectAll('circle, text')
+      .datum((d, i, nodes) => nodes[i].nodeName)
+      .sort((a, b) => {
+        if (a === b) {
+          return 0;
+        }
+        if (a === 'text') {
+          return 1;
+        }
+
+        return -1;
+      });
+  }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
 
   useEffect(() => {
     d3.select('g')
-      .selectAll('circle')
+      .selectAll(beadShape)
       .on('click', e => {
         e.stopPropagation();
         setCurrentBead(e.target);
         setRealViewModal(true);
       });
-  }, [beadingData, beadsObjectData, threadsRawData]);
+  }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
 
   useEffect(() => {
     zoomPanning();
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      d3.select(`#group6374964d690ff5cb4a2f739a`)
+        .append('circle')
+        .attr('cx', 100)
+        .attr('cy', 200)
+        .attr('fill', 'black');
+    }, 1000);
+  });
 
   return <Canvas className="canvas" color={COLOR} />;
 }

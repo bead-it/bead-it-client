@@ -7,29 +7,27 @@ import Navbar from '../../components/navbar';
 import BeadworkTable from '../../components/beadworktable';
 import RealViewModal from '../../components/modals/realviewmodal';
 import {
-  beadsReceived,
-  currentBead,
-  profileModal,
-  realViewModal,
-  threadsReceived,
-  tokenInfo,
+  beadsReceivedAtom,
+  currentBeadAtom,
+  profileModalAtom,
+  realViewModalAtom,
+  threadsReceivedAtom,
+  tokenInfoAtom,
 } from '../../recoilstore/atoms';
+import { userInfoSel } from '../../recoilstore/seletors';
 import apiErrorHandler from '../../service/apierrorhandler';
 import { getAllBeadsData } from '../../service/beadapi';
 import { getAllThreadsData } from '../../service/threadapi';
-import { userInfo } from '../../recoilstore/seletors';
 
 export default function Beadwork() {
-  const setProfileModal = useSetRecoilState(profileModal);
-  const setRealViewModal = useSetRecoilState(realViewModal);
-  const setBeadsReceived = useSetRecoilState(beadsReceived);
-  const setThreadsReceived = useSetRecoilState(threadsReceived);
-  const setCurrentBead = useSetRecoilState(currentBead);
+  const setProfileModal = useSetRecoilState(profileModalAtom);
+  const setRealViewModal = useSetRecoilState(realViewModalAtom);
+  const setBeadsReceived = useSetRecoilState(beadsReceivedAtom);
+  const setThreadsReceived = useSetRecoilState(threadsReceivedAtom);
+  const setCurrentBead = useSetRecoilState(currentBeadAtom);
 
-  const [token, setToken] = useRecoilState(tokenInfo);
-  const user = useRecoilValue(userInfo);
-  const beadsReceivedData = useRecoilValue(beadsReceived);
-  const threadsReceivedData = useRecoilValue(threadsReceived);
+  const [token, setToken] = useRecoilState(tokenInfoAtom);
+  const user = useRecoilValue(userInfoSel);
   const userId = user.id;
 
   const router = useRouter();
@@ -66,11 +64,6 @@ export default function Beadwork() {
       dataFetching();
     }
   }, [userId, beadworkId, token]);
-
-  useEffect(() => {
-    console.log(beadsReceivedData);
-    console.log(threadsReceivedData);
-  }, [beadsReceivedData, threadsReceivedData]);
 
   const closeModals = e => {
     e.stopPropagation();

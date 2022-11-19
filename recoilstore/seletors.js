@@ -1,54 +1,99 @@
 import { selector } from 'recoil';
 import { v4 } from 'uuid';
 import jwt from 'jsonwebtoken';
-import { beadsReceived, threadsReceived, tokenInfo } from './atoms';
-import doBeading from '../utils/beading';
+import {
+  beadShapeAtom,
+  beadsReceivedAtom,
+  exclusiveBeadsAtom,
+  threadsReceivedAtom,
+  tokenInfoAtom,
+} from './atoms';
+import makebeadGroupInfo from '../utils/d3datautil/makebeadgroups';
+import makeThreadGroup from '../utils/d3datautil/makethreadgroup';
+import doBeading from '../utils/d3datautil/beading';
 
-const beadsData = selector({
-  key: `beadsData/${v4()}`,
+const beadsMapSel = selector({
+  key: `beadsMapSel/${v4()}`,
   get: ({ get }) => {
-    const beads = get(beadsReceived);
+    const beads = get(beadsReceivedAtom);
     const beadsMap = {};
 
-    beads.forEach(bead => {
-      const { _id: tempId } = bead;
-      beadsMap[tempId] = bead;
-    });
+    if (beads) {
+      beads.forEach(bead => {
+        const { _id: tempId } = bead;
+        beadsMap[tempId] = bead;
+      });
+    }
 
     return beadsMap;
   },
 });
 
-const threadsData = selector({
-  key: `threadsData/${v4()}`,
+const threadsMapSel = selector({
+  key: `threadsMapSel/${v4()}`,
   get: ({ get }) => {
-    const threads = get(threadsReceived);
+    const threads = get(threadsReceivedAtom);
     const threadsMap = {};
 
-    threads.forEach(thread => {
-      const { _id: tempId } = thread;
-      threadsMap[tempId] = thread;
-    });
+    if (threads) {
+      threads.forEach(thread => {
+        const { _id: tempId } = thread;
+        threadsMap[tempId] = thread;
+      });
+    }
 
     return threadsMap;
   },
 });
 
-const beading = selector({
-  key: `beading/${v4()}`,
+const beadsGroupSel = selector({
+  key: `beadGroupSel/${v4()}`,
   get: ({ get }) => {
-    const beads = get(beadsReceived);
-    const threads = get(threadsReceived);
-    const beadsInfo = doBeading(beads, threads);
+    const beads = get(beadsReceivedAtom);
+    const threads = get(threadsReceivedAtom);
+    const beadsMap = get(beadsMapSel);
+    const exclusiveBeads = get(exclusiveBeadsAtom);
 
-    return beadsInfo;
+    if ((beads, threads)) {
+      return makebeadGroupInfo(beads, threads, beadsMap, exclusiveBeads);
+    }
+
+    return [];
   },
 });
 
-const userInfo = selector({
-  key: `userInfo/${v4()}`,
+const threadsGroupSel = selector({
+  key: `threadsGroupSel/${v4()}`,
   get: ({ get }) => {
-    const newToken = get(tokenInfo);
+    const threads = get(threadsReceivedAtom);
+    const beadsGroups = get(beadsGroupSel);
+
+    if (beadsGroups.length > 0) {
+      return makeThreadGroup(threads, beadsGroups);
+    }
+
+    return [];
+  },
+});
+
+const beadingGroupSel = selector({
+  key: `beadingGroupSel/${v4()}`,
+  get: ({ get }) => {
+    const beadsGroups = get(beadsGroupSel);
+    const beadShape = get(beadShapeAtom);
+
+    if (beadsGroups.length > 0) {
+      return doBeading(beadsGroups, beadShape);
+    }
+
+    return [];
+  },
+});
+
+const userInfoSel = selector({
+  key: `userInfoSel/${v4()}`,
+  get: ({ get }) => {
+    const newToken = get(tokenInfoAtom);
     console.log('refresh token!!');
 
     if (newToken) {
@@ -67,4 +112,11 @@ const userInfo = selector({
   },
 });
 
-export { beadsData, threadsData, beading, userInfo };
+export {
+  beadsMapSel,
+  threadsMapSel,
+  beadsGroupSel,
+  threadsGroupSel,
+  beadingGroupSel,
+  userInfoSel,
+};

@@ -1,47 +1,59 @@
 import { atom } from 'recoil';
 import { v4 } from 'uuid';
 
-const deviceSize = atom({
-  key: `deviceSize/${v4()}`,
+const deviceSizeAtom = atom({
+  key: `deviceSizeAtom/${v4()}`,
   default: 'large',
 });
 
-const profileModal = atom({
-  key: `profileModal/${v4()}`,
+const profileModalAtom = atom({
+  key: `profileModalAtom/${v4()}`,
   default: false,
 });
 
-const realViewModal = atom({
-  key: `realViewModal/${v4()}`,
+const realViewModalAtom = atom({
+  key: `realViewModalAtom/${v4()}`,
   default: false,
 });
 
-const tokenInfo = atom({
-  key: `tokenInfo/${v4()}`,
+const tokenInfoAtom = atom({
+  key: `tokenInfoAtom/${v4()}`,
   default: '',
 });
 
-const beadsReceived = atom({
-  key: `beadsReceived/${v4()}`,
+const beadsReceivedAtom = atom({
+  key: `beadsReceivedAtom/${v4()}`,
+  default: null,
+});
+
+const threadsReceivedAtom = atom({
+  key: `threadsReceivedAtom/${v4()}`,
+  default: null,
+});
+
+const exclusiveBeadsAtom = atom({
+  key: `exclusiveBeadsAtom/${v4()}`,
   default: [],
 });
 
-const threadsReceived = atom({
-  key: `threadsReceived/${v4()}`,
-  default: [],
+const beadShapeAtom = atom({
+  key: `beadShapeAtom/${v4()}`,
+  default: 'circle',
 });
 
-const currentBead = atom({
-  key: `currentBead/${v4()}`,
+const currentBeadAtom = atom({
+  key: `currentBeadAtom/${v4()}`,
   default: null,
 });
 
 export {
-  deviceSize,
-  profileModal,
-  realViewModal,
-  tokenInfo,
-  beadsReceived,
-  threadsReceived,
-  currentBead,
+  deviceSizeAtom,
+  profileModalAtom,
+  realViewModalAtom,
+  tokenInfoAtom,
+  beadsReceivedAtom,
+  threadsReceivedAtom,
+  exclusiveBeadsAtom,
+  beadShapeAtom,
+  currentBeadAtom,
 };

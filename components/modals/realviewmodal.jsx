@@ -2,15 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import { currentBead, realViewModal } from '../../recoilstore/atoms';
-import { beadsData } from '../../recoilstore/seletors';
+import { currentBeadAtom, realViewModalAtom } from '../../recoilstore/atoms';
+import { beadsMapSel } from '../../recoilstore/seletors';
 
 export default function RealViewModal() {
   const iframeRef1 = useRef();
 
-  const modalOpen = useRecoilValue(realViewModal);
-  const bead = useRecoilValue(currentBead);
-  const beads = useRecoilValue(beadsData);
+  const modalOpen = useRecoilValue(realViewModalAtom);
+  const bead = useRecoilValue(currentBeadAtom);
+  const beadsMap = useRecoilValue(beadsMapSel);
   const [src, setSrc] = useState('');
   const [name, setName] = useState('');
 
@@ -24,7 +24,7 @@ export default function RealViewModal() {
   useEffect(() => {
     if (bead) {
       beadId = bead.getAttribute('id').slice(2);
-      selectedBeadData = beads[beadId];
+      selectedBeadData = beadsMap[beadId];
       setSrc(selectedBeadData.page.url);
       setName(selectedBeadData.page.title);
 
@@ -54,7 +54,7 @@ export default function RealViewModal() {
         src={src}
         name={name}
         sandbox="allow-same-origin allow-scripts allow-popups"
-        allowFullScreen="true"
+        allowFullScreen
       >
         안 열림...
       </WebView>

@@ -18,9 +18,13 @@ function MyApp({ Component, pageProps }) {
   }, [refreshUserToggle]);
 
   useEffect(() => {
-    setInterval(() => {
+    const doIntervalRefresh = () => {
       setRefreshUserToggle(true);
-    }, 1800000);
+
+      setTimeout(doIntervalRefresh, 1800000);
+    };
+
+    doIntervalRefresh();
   }, []);
 
   const refreshHandler = () => {

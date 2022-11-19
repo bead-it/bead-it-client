@@ -4,12 +4,12 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 
 import Navbar from '../components/navbar';
 
-import { profileModal } from '../recoilstore/atoms';
-import { userInfo } from '../recoilstore/seletors';
+import { profileModalAtom } from '../recoilstore/atoms';
+import { userInfoSel } from '../recoilstore/seletors';
 
 export default function Home() {
-  const setProfileModal = useSetRecoilState(profileModal);
-  const user = useRecoilValue(userInfo);
+  const setProfileModal = useSetRecoilState(profileModalAtom);
+  const user = useRecoilValue(userInfoSel);
 
   const closeModals = async e => {
     e.stopPropagation();

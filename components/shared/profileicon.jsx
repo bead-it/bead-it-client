@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useSetRecoilState } from 'recoil';
 
 import PROFILE_SIZE from '../../constants/profileicon';
-import { profileModal } from '../../recoilstore/atoms';
+import { profileModalAtom } from '../../recoilstore/atoms';
 
 const ProfileIcon = forwardRef(({ src, alt, size }, ref) => {
-  const setModalOpen = useSetRecoilState(profileModal);
+  const setModalOpen = useSetRecoilState(profileModalAtom);
 
   const profileModalControl = e => {
     e.stopPropagation();

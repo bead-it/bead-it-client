@@ -1,10 +1,10 @@
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
-import { tokenInfo } from '../../recoilstore/atoms';
-import refreshUser from '../../utils/refreshuser';
+import { tokenInfoAtom } from '../../recoilstore/atoms';
+import refreshUser from '../../utils/authutil/refreshuser';
 
 export default function RefreshUser() {
-  const [newToken, setNewToken] = useRecoilState(tokenInfo);
+  const [newToken, setNewToken] = useRecoilState(tokenInfoAtom);
 
   useEffect(() => {
     refreshUser(setNewToken);
