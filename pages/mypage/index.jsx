@@ -4,6 +4,9 @@ import { useSetRecoilState } from 'recoil';
 
 import Navbar from '../../components/navbar';
 import { profileModalAtom } from '../../recoilstore/atoms';
+import UserInfo from '../../components/mypages/userinfo';
+import MyWorks from '../../components/mypages/myworks';
+import SharedWorks from '../../components/mypages/sharedworks';
 
 export default function Mypage() {
   const setProfileModal = useSetRecoilState(profileModalAtom);
@@ -16,10 +19,16 @@ export default function Mypage() {
   return (
     <Wrapper onClick={closeModals}>
       <Navbar />
-      <UserInfo />
+      <UserInfoWrapper>
+        <UserInfo />
+      </UserInfoWrapper>
       <Beadworks>
-        <MyWorks />
-        <SharedWorks />
+        <MyWorksWrapper>
+          <MyWorks />
+        </MyWorksWrapper>
+        <SharedWorksWrapper>
+          <SharedWorks />
+        </SharedWorksWrapper>
       </Beadworks>
     </Wrapper>
   );
@@ -38,11 +47,13 @@ const Wrapper = styled.div`
   padding-top: 1vh;
 `;
 
-const UserInfo = styled.div`
+const UserInfoWrapper = styled.div`
   width: 100%;
   height: 25%;
 
-  background-color: green;
+  background-color: lightgreen;
+  border: 5px solid black;
+  border-radius: 10px;
 
   @media (max-width: 767px) {
     height: 15%;
@@ -58,19 +69,19 @@ const Beadworks = styled.div`
   width: 100%;
   height: 60%;
 
-  background-color: orange;
-
   @media (max-width: 767px) {
     flex-direction: column;
     height: 75%;
   }
 `;
 
-const MyWorks = styled.div`
+const MyWorksWrapper = styled.div`
   width: 48%;
   height: 100%;
 
   background-color: yellow;
+  border: 5px solid black;
+  border-radius: 10px;
 
   @media (max-width: 767px) {
     width: 100%;
@@ -78,11 +89,13 @@ const MyWorks = styled.div`
   }
 `;
 
-const SharedWorks = styled.div`
+const SharedWorksWrapper = styled.div`
   width: 48%;
   height: 100%;
 
-  background-color: red;
+  background-color: lightpink;
+  border: 5px solid black;
+  border-radius: 10px;
 
   @media (max-width: 767px) {
     width: 100%;

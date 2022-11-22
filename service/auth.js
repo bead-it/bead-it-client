@@ -30,6 +30,7 @@ const login = async () => {
     const { beaditToken } = loginResponse;
     const user = jwt.verify(beaditToken, process.env.SECRET_KEY);
 
+    console.log('token?? : ', beaditToken);
     setCookie('beaditToken', beaditToken, { secure: false });
 
     console.log(beaditToken, user);

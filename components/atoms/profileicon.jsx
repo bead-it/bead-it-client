@@ -6,12 +6,14 @@ import { useSetRecoilState } from 'recoil';
 import PROFILE_SIZE from '../../constants/profileicon';
 import { profileModalAtom } from '../../recoilstore/atoms';
 
-const ProfileIcon = forwardRef(({ src, alt, size }, ref) => {
+const ProfileIcon = forwardRef(({ src, alt, size, option }, ref) => {
   const setModalOpen = useSetRecoilState(profileModalAtom);
 
   const profileModalControl = e => {
     e.stopPropagation();
-    setModalOpen(prev => !prev);
+    if (option.clickable) {
+      setModalOpen(prev => !prev);
+    }
   };
 
   return (
@@ -28,9 +30,14 @@ const ProfileIcon = forwardRef(({ src, alt, size }, ref) => {
 });
 
 ProfileIcon.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   alt: PropTypes.string.isRequired,
   size: PropTypes.string.isRequired,
+  option: PropTypes.object.isRequired,
+};
+
+ProfileIcon.defaultProps = {
+  src: '',
 };
 
 export default ProfileIcon;

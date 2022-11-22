@@ -35,9 +35,16 @@ export default function ProfileModal({ profileIconRef }) {
     router.push('/');
   };
 
+  const toMyPage = e => {
+    e.stopPropagation();
+    router.push('/mypage');
+  };
+
   return (
     <Wrapper position={position} modalOpen={modalOpen}>
-      <div>My page</div>
+      <ToMyPage type="button" onClick={toMyPage}>
+        My page
+      </ToMyPage>
       <hr />
       <Logout type="button" onClick={logoutHandler}>
         Sign out
@@ -73,6 +80,14 @@ const Wrapper = styled.div`
 `;
 
 const Logout = styled.div`
+  &:hover {
+    cursor: pointer;
+    background-color: #eeeeee;
+    transform: scale(1.02);
+  }
+`;
+
+const ToMyPage = styled.div`
   &:hover {
     cursor: pointer;
     background-color: #eeeeee;
