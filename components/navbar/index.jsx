@@ -3,18 +3,17 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
-import { useRouter } from 'next/router';
 
-import ProfileIcon from '../shared/profileicon';
+import ProfileIcon from '../atoms/profileicon';
 import ProfileModal from '../modals/profilemodal';
 import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
 import { login } from '../../service/auth';
 import refreshUser from '../../utils/authutil/refreshuser';
 import AddBeadButton from './addbeadbutton';
+import HomeButton from './homebutton';
 
 export default function Navbar({ title }) {
-  const router = useRouter();
   const profileIconRef = useRef(null);
 
   const [deviceWindowSize, setDeviceWindowSize] =
@@ -53,19 +52,10 @@ export default function Navbar({ title }) {
     }
   };
 
-  const routingHome = e => {
-    e.stopPropagation();
-    router.push('/');
-  };
-
   return (
     <Wrapper>
-      <LeftBuffer poin>
-        <Logo
-          onClick={routingHome}
-          src="/images/bead-it-logo.png"
-          alt="bead-it-logo"
-        />
+      <LeftBuffer>
+        <HomeButton />
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
@@ -78,6 +68,7 @@ export default function Navbar({ title }) {
             src={user.profile}
             alt="profile image"
             size="medium"
+            option={{ clickable: true }}
           />
         )}
         <ProfileModal profileIconRef={profileIconRef} />
@@ -113,14 +104,8 @@ const LeftBuffer = styled.div`
   justify-content: space-around;
   align-items: center;
 
-  width: 15%;
+  width: 25%;
   height: 100%;
-`;
-
-const Logo = styled.img`
-  max-width: 90%;
-  max-height: 90%;
-  aspect-ratio: 3 / 2;
 `;
 
 const Title = styled.div`
@@ -133,7 +118,7 @@ const RightBuffer = styled.div`
   justify-content: space-around;
   align-items: center;
 
-  width: 15%;
+  width: 25%;
   height: 100%;
 `;
 

@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { RecoilRoot } from 'recoil';
 import PropTypes from 'prop-types';
 
-import GlobalStyle from '../components/shared/globalstyle';
+import GlobalStyle from '../components/styles/globalstyle';
 import RefreshUser from '../components/refreshuser';
 import throttle from '../utils/throttle';
 

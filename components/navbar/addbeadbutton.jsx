@@ -27,13 +27,13 @@ export default function AddBeadButton() {
   const user = useRecoilValue(userInfoSel);
   const beadwork = useRecoilValue(currentBeadworkInfoAtom);
   const [token, setToken] = useRecoilState(tokenInfoAtom);
-  const beadId = useRecoilValue(currentBeadIdAtom);
+  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
   const setBeadsData = useSetRecoilState(beadsReceivedAtom);
   const setThreadsData = useSetRecoilState(threadsReceivedAtom);
 
   const createBeadModalOpen = e => {
     e.stopPropagation();
-    if (beadId) {
+    if (currentBeadId) {
       setInputModal(true);
     }
   };
@@ -59,7 +59,7 @@ export default function AddBeadButton() {
           user.id,
           beadworkId,
           token,
-          beadId,
+          currentBeadId,
           newBeadId,
         );
         return response;
@@ -73,6 +73,7 @@ export default function AddBeadButton() {
     setThreadsData(prev => [...prev, newThreadData]);
 
     setInputModal(false);
+    setCurrentBeadId(newBeadId);
   };
 
   const cancleCreateBead = e => {
@@ -82,7 +83,7 @@ export default function AddBeadButton() {
 
   return (
     <>
-      <Wrapper active={beadId} onClick={createBeadModalOpen}>
+      <Wrapper active={currentBeadId} onClick={createBeadModalOpen}>
         <CreateIcon size={24} />
       </Wrapper>
       <InputModal>
