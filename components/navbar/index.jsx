@@ -7,18 +7,20 @@ import { useRouter } from 'next/router';
 
 import ProfileIcon from '../shared/profileicon';
 import ProfileModal from '../modals/profilemodal';
-import { deviceSize, token } from '../../recoilstore/atoms';
-import { userInfo } from '../../recoilstore/seletors';
+import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+import { userInfoSel } from '../../recoilstore/seletors';
 import { login } from '../../service/auth';
-import refreshUser from '../../utils/refreshuser';
+import refreshUser from '../../utils/authutil/refreshuser';
+import AddBeadButton from './addbeadbutton';
 
 export default function Navbar({ title }) {
   const router = useRouter();
   const profileIconRef = useRef(null);
 
-  const [deviceWindowSize, setDeviceWindowSize] = useRecoilState(deviceSize);
-  const setToken = useSetRecoilState(token);
-  const user = useRecoilValue(userInfo);
+  const [deviceWindowSize, setDeviceWindowSize] =
+    useRecoilState(deviceSizeAtom);
+  const setToken = useSetRecoilState(tokenInfoAtom);
+  const user = useRecoilValue(userInfoSel);
   const [loginUrl, setLoginUrl] = useState(
     `/images/google-signin-${deviceWindowSize}.png`,
   );
@@ -67,12 +69,13 @@ export default function Navbar({ title }) {
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
+        <AddBeadButton />
         {!user.id ? (
           <Login src={loginUrl} alt="Google login" onClick={loginHandler} />
         ) : (
           <ProfileIcon
             ref={profileIconRef}
-            src="/images/bead-it-logo.png"
+            src={user.profile}
             alt="profile image"
             size="medium"
           />

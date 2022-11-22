@@ -1,45 +1,110 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 
-import zoomPanning from '../../utils/zoompanning';
-import { beading } from '../../recoilstore/seletors';
+import zoomPanning from '../../utils/d3datautil/zoompanning';
+import beadworkText from '../../utils/d3datautil/beadworktext';
+import {
+  tableInit,
+  tableGrouping,
+  tableBeadDrawing,
+  tableThreadDrawing,
+  tableSorting,
+} from '../../utils/d3datautil/tablework';
+import {
+  clickEvent,
+  mouseOverEvent,
+  hightlightCurrentBead,
+} from '../../utils/d3datautil/event';
+import {
+  beadingGroupSel,
+  beadsMapSel,
+  threadsGroupSel,
+} from '../../recoilstore/seletors';
+
+import COLOR from '../../constants/colors';
+import {
+  beadShapeAtom,
+  currentBeadIdAtom,
+  currentBeadworkInfoAtom,
+  detailModalAtom,
+  detailModalContentsAtom,
+  realViewModalAtom,
+  mouseoverBeadPositionAtom,
+  beadActionModalAtom,
+} from '../../recoilstore/atoms';
 
 export default function BeadworkTable() {
-  const beadingData = useRecoilValue(beading);
+  const beadingGroupData = useRecoilValue(beadingGroupSel);
+  const beadsMap = useRecoilValue(beadsMapSel);
+  const threadsGroup = useRecoilValue(threadsGroupSel);
+  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
+  const setRealViewModal = useSetRecoilState(realViewModalAtom);
+  const setDetailModal = useSetRecoilState(detailModalAtom);
+  const setDetailModalContents = useSetRecoilState(detailModalContentsAtom);
+  const setMouseoverBeadPosition = useSetRecoilState(mouseoverBeadPositionAtom);
+  const setBeadActionModal = useSetRecoilState(beadActionModalAtom);
+  const beadShape = useRecoilValue(beadShapeAtom);
+  const beadworkInfo = useRecoilValue(currentBeadworkInfoAtom);
 
   useEffect(() => {
-    const svg = d3
-      .select('.canvas')
-      .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%');
-
-    svg.append('g');
+    tableInit();
   }, []);
 
   useEffect(() => {
-    const beads = d3
-      .select('g')
-      .selectAll('circle')
-      .data(beadingData.beadsInfo);
-    beads
-      .join('circle')
-      .attr('id', d => d.id)
-      .attr('cx', d => d.cx)
-      .attr('cy', d => d.cy)
-      .attr('r', d => d.r)
-      .attr('fill', d => d.fill)
-      .attr('stroke', d => d.stroke)
-      .attr('stroke-width', d => d['stroke-width']);
-  }, [beadingData, beadingData.beadsInfo?.length]);
+    if (beadworkInfo) {
+      beadworkText(beadworkInfo);
+    }
+  }, [beadworkInfo]);
+
+  useEffect(() => {
+    tableGrouping(beadingGroupData);
+  }, [beadingGroupData]);
+
+  useEffect(() => {
+    tableBeadDrawing(beadingGroupData, beadShape);
+  }, [beadingGroupData, beadShape]);
+
+  useEffect(() => {
+    tableThreadDrawing(beadingGroupData, threadsGroup);
+  }, [beadingGroupData, threadsGroup]);
+
+  useEffect(() => {
+    tableSorting();
+  }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
+
+  useEffect(() => {
+    clickEvent(beadShape, setCurrentBeadId, setRealViewModal);
+    mouseOverEvent(
+      setDetailModal,
+      setDetailModalContents,
+      setBeadActionModal,
+      setMouseoverBeadPosition,
+      beadsMap,
+    );
+  }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
 
   useEffect(() => {
     zoomPanning();
   }, []);
 
-  return <Canvas className="canvas" />;
+  useEffect(() => {
+    return hightlightCurrentBead(currentBeadId);
+  }, [currentBeadId]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      d3.select(`#group6374964d690ff5cb4a2f739a`)
+        .append('circle')
+        .attr('cx', 100)
+        .attr('cy', 200)
+        .attr('r', 50)
+        .attr('fill', 'black');
+    }, 1000);
+  });
+
+  return <Canvas className="canvas" color={COLOR} />;
 }
 
 const Canvas = styled.div`
@@ -50,7 +115,7 @@ const Canvas = styled.div`
   left: 0;
   top: 0;
 
-  background-color: brown;
+  background-color: ${props => props.color.pink};
 
   z-index: 0;
 `;

@@ -4,15 +4,15 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { profileModal, token } from '../../recoilstore/atoms';
+import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { logout } from '../../service/auth';
-import refreshUser from '../../utils/refreshuser';
+import refreshUser from '../../utils/authutil/refreshuser';
 
 export default function ProfileModal({ profileIconRef }) {
   const router = useRouter();
-  const modalOpen = useRecoilValue(profileModal);
+  const modalOpen = useRecoilValue(profileModalAtom);
   const [position, setPosition] = useState({});
-  const setToken = useSetRecoilState(token);
+  const setToken = useSetRecoilState(tokenInfoAtom);
 
   useEffect(() => {
     if (profileIconRef && profileIconRef.current) {
@@ -75,7 +75,7 @@ const Wrapper = styled.div`
 const Logout = styled.div`
   &:hover {
     cursor: pointer;
-    background-color: gray;
+    background-color: #eeeeee;
     transform: scale(1.02);
   }
 `;

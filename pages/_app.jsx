@@ -9,26 +9,28 @@ import RefreshUser from '../components/refreshuser';
 import throttle from '../utils/throttle';
 
 function MyApp({ Component, pageProps }) {
-  console.log('loading app?');
   const [refreshUserToggle, setRefreshUserToggle] = useState(false);
-
-  // useEffect(() => {
-  //   setInterval(() => {
-
-  //   })
-  // })
 
   useEffect(() => {
     if (refreshUserToggle) {
-      console.log('??');
       setRefreshUserToggle(false);
     }
   }, [refreshUserToggle]);
 
+  useEffect(() => {
+    const doIntervalRefresh = () => {
+      setRefreshUserToggle(true);
+
+      setTimeout(doIntervalRefresh, 1800000);
+    };
+
+    doIntervalRefresh();
+  }, []);
+
   const refreshHandler = () => {
     throttle(() => {
       setRefreshUserToggle(true);
-    }, 60000);
+    }, 600000);
   };
 
   return (
