@@ -6,9 +6,11 @@ import { useRouter } from 'next/router';
 import Navbar from '../../components/navbar';
 import BeadworkTable from '../../components/beadworktable';
 import RealViewModal from '../../components/modals/realviewmodal';
+import DetailModal from '../../components/modals/detailmodal';
 import {
   beadsReceivedAtom,
-  currentBeadAtom,
+  currentBeadIdAtom,
+  currentBeadworkInfoAtom,
   profileModalAtom,
   realViewModalAtom,
   threadsReceivedAtom,
@@ -18,13 +20,16 @@ import { userInfoSel } from '../../recoilstore/seletors';
 import apiErrorHandler from '../../service/apierrorhandler';
 import { getAllBeadsData } from '../../service/beadapi';
 import { getAllThreadsData } from '../../service/threadapi';
+import { getBeadworkData } from '../../service/beadworkapi';
+import BeadActionModal from '../../components/modals/beadactionmodal';
 
 export default function Beadwork() {
   const setProfileModal = useSetRecoilState(profileModalAtom);
   const setRealViewModal = useSetRecoilState(realViewModalAtom);
   const setBeadsReceived = useSetRecoilState(beadsReceivedAtom);
   const setThreadsReceived = useSetRecoilState(threadsReceivedAtom);
-  const setCurrentBead = useSetRecoilState(currentBeadAtom);
+  const setCurrentBeadId = useSetRecoilState(currentBeadIdAtom);
+  const setCurrentBeadworkInfo = useSetRecoilState(currentBeadworkInfoAtom);
 
   const [token, setToken] = useRecoilState(tokenInfoAtom);
   const user = useRecoilValue(userInfoSel);
@@ -34,8 +39,27 @@ export default function Beadwork() {
   const { beadworkId } = router.query;
 
   useEffect(() => {
-    if (userId && beadworkId && token) {
-      const dataFetching = async () => {
+    if (userId && beadworkId) {
+      const getBeadworkInfoFetching = async () => {
+        const beadworkData = await apiErrorHandler(
+          async () => {
+            const response = await getBeadworkData(userId, beadworkId, token);
+            return response;
+          },
+          null,
+          { setToken },
+        );
+
+        setCurrentBeadworkInfo(beadworkData);
+      };
+
+      getBeadworkInfoFetching();
+    }
+  }, [userId, beadworkId]);
+
+  useEffect(() => {
+    if (userId && beadworkId) {
+      const beadingDataFetching = async () => {
         const beadsData = await apiErrorHandler(
           async () => {
             const response = await getAllBeadsData(userId, beadworkId, token);
@@ -61,22 +85,24 @@ export default function Beadwork() {
         }
       };
 
-      dataFetching();
+      beadingDataFetching();
     }
-  }, [userId, beadworkId, token]);
+  }, [userId, beadworkId]);
 
   const closeModals = e => {
     e.stopPropagation();
     setProfileModal(false);
     setRealViewModal(false);
-    setCurrentBead(null);
+    setCurrentBeadId(null);
   };
 
   return (
     <Wrapper onClick={closeModals}>
-      <Navbar />
       <BeadworkTable />
+      <Navbar />
       <RealViewModal />
+      <DetailModal />
+      <BeadActionModal />
     </Wrapper>
   );
 }

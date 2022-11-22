@@ -11,6 +11,7 @@ import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
 import { login } from '../../service/auth';
 import refreshUser from '../../utils/authutil/refreshuser';
+import AddBeadButton from './addbeadbutton';
 
 export default function Navbar({ title }) {
   const router = useRouter();
@@ -68,12 +69,13 @@ export default function Navbar({ title }) {
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
+        <AddBeadButton />
         {!user.id ? (
           <Login src={loginUrl} alt="Google login" onClick={loginHandler} />
         ) : (
           <ProfileIcon
             ref={profileIconRef}
-            src="/images/bead-it-logo.png"
+            src={user.profile}
             alt="profile image"
             size="medium"
           />

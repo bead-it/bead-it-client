@@ -126,8 +126,8 @@ const makebeadGroupInfo = (beads, threads, beadsMap, exclusiveBeads) => {
       }
 
       currentGroups.forEach(group => {
-        const newX = currentPosition.x + Math.cos(currentAngle) * 200;
-        const newY = currentPosition.y - Math.sin(currentAngle) * 200;
+        const newX = currentPosition.x + Math.cos(currentAngle) * 250;
+        const newY = currentPosition.y - Math.sin(currentAngle) * 250;
 
         const { domain } = beadsMap[group[0]].page;
 

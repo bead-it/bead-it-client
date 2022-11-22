@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
+// import fetch from 'cross-fetch';
 
 import Navbar from '../components/navbar';
 
@@ -21,6 +22,10 @@ export default function Home() {
     <Wrapper onClick={closeModals}>
       <Navbar />
       <Welcome>Welcome to Beadit!</Welcome>
+      <iframe
+        src="http://localhost:8080/https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String/search"
+        title="title"
+      />
     </Wrapper>
   );
 }
