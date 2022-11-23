@@ -21,12 +21,18 @@ export default function SharedWorks() {
           const response = await getUserData(currentUserData.id, token);
           return response;
         },
-        null,
+        errorResult => {
+          if (process.env.NODE_ENV === 'development') {
+            window.alert(errorResult.message);
+          }
+          return null;
+        },
         { setToken },
       );
 
-      setMyData(userData);
-      console.log(userData);
+      if (userData) {
+        setMyData(userData);
+      }
     };
 
     if (currentUserData && token) {

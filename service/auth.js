@@ -14,18 +14,30 @@ const login = async () => {
     const { _tokenResponse: token } = signInResult;
     const { oauthIdToken: idToken, oauthAccessToken: accessToken } = token;
 
-    const loginResponse = await apiErrorHandler(async () => {
-      const response = await API({
-        method: 'post',
-        url: '/login',
-        data: {
-          accessToken,
-          idToken,
-        },
-      });
+    const loginResponse = await apiErrorHandler(
+      async () => {
+        const response = await API({
+          method: 'post',
+          url: '/login',
+          data: {
+            accessToken,
+            idToken,
+          },
+        });
 
-      return response;
-    });
+        return response;
+      },
+      errorResult => {
+        if (process.env.NODE_ENV === 'development') {
+          window.alert(errorResult.message);
+        }
+        return null;
+      },
+    );
+
+    if (!loginResponse) {
+      return false;
+    }
 
     const { beaditToken } = loginResponse;
     const user = jwt.verify(beaditToken, process.env.SECRET_KEY);

@@ -10,6 +10,32 @@ const getBeadworkData = async (userId, beadworkId, token) => {
   });
 };
 
-const postBeadworkData = async () => {};
+const postBeadworkData = async (userId, token) => {
+  return API({
+    method: 'post',
+    url: `users/${userId}/beadworks`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
-export { getBeadworkData, postBeadworkData };
+const postBeadworkDataFromBeads = async (
+  userId,
+  beadworkId,
+  token,
+  selectedBeads,
+) => {
+  return API({
+    method: 'post',
+    url: `users/${userId}/beadworks/${beadworkId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      selectedBeads,
+    },
+  });
+};
+
+export { getBeadworkData, postBeadworkData, postBeadworkDataFromBeads };

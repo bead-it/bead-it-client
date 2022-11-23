@@ -27,7 +27,7 @@ const makeNextGroups = (group, beadsMap, exclusiveBeads) => {
 
   const nextGroupObject = {};
   group.forEach(beadId => {
-    if (exclusiveSet.has(beadId)) {
+    if (!exclusiveSet.has(beadId)) {
       const { domain } = beadsMap[beadId].page;
       if (nextGroupObject[domain]) {
         nextGroupObject[domain].push(beadId);
@@ -96,14 +96,17 @@ const makebeadGroupInfo = (beads, threads, beadsMap, exclusiveBeads) => {
       let linkCount;
       let angle;
       let currentAngle;
+      let distance;
 
       if (prevGroups === 'start') {
         linkCount = currentGroups.length;
         angle = (Math.PI * 2) / linkCount;
         currentAngle = 0;
+        distance = 500;
       } else {
         linkCount = currentGroups.length + 1;
         angle = (Math.PI * 2) / linkCount;
+        distance = 250;
 
         if (prevPosition.x === currentPosition.x) {
           currentAngle =
@@ -126,8 +129,8 @@ const makebeadGroupInfo = (beads, threads, beadsMap, exclusiveBeads) => {
       }
 
       currentGroups.forEach(group => {
-        const newX = currentPosition.x + Math.cos(currentAngle) * 250;
-        const newY = currentPosition.y - Math.sin(currentAngle) * 250;
+        const newX = currentPosition.x + Math.cos(currentAngle) * distance;
+        const newY = currentPosition.y - Math.sin(currentAngle) * distance;
 
         const { domain } = beadsMap[group[0]].page;
 
@@ -137,7 +140,7 @@ const makebeadGroupInfo = (beads, threads, beadsMap, exclusiveBeads) => {
           const nextBeads = directions[beadId];
           if (nextBeads) {
             nextGroups.push(
-              ...makeNextGroups(directions[beadId], beadsMap, exclusiveBeads),
+              ...makeNextGroups(nextBeads, beadsMap, exclusiveBeads),
             );
           }
         });

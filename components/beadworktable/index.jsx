@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import * as d3 from 'd3';
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 
 import zoomPanning from '../../utils/d3datautil/zoompanning';
@@ -11,6 +10,8 @@ import {
   tableBeadDrawing,
   tableThreadDrawing,
   tableSorting,
+  tableTextDrawing,
+  tableUngroupIconDrawing,
 } from '../../utils/d3datautil/tablework';
 import {
   clickEvent,
@@ -19,6 +20,7 @@ import {
 } from '../../utils/d3datautil/event';
 import {
   beadingGroupSel,
+  beadsGroupSel,
   beadsMapSel,
   threadsGroupSel,
 } from '../../recoilstore/seletors';
@@ -29,24 +31,36 @@ import {
   currentBeadIdAtom,
   currentBeadworkInfoAtom,
   detailModalAtom,
-  detailModalContentsAtom,
   realViewModalAtom,
   mouseoverBeadPositionAtom,
   beadActionModalAtom,
+  selectStartPointAtom,
+  mouseoverBeadIdAtom,
+  selectedBeadsAtom,
+  exclusiveBeadsAtom,
+  threadModifyModalAtom,
+  currentThreadIdAtom,
 } from '../../recoilstore/atoms';
 
 export default function BeadworkTable() {
+  const beadsGroupData = useRecoilValue(beadsGroupSel);
   const beadingGroupData = useRecoilValue(beadingGroupSel);
   const beadsMap = useRecoilValue(beadsMapSel);
   const threadsGroup = useRecoilValue(threadsGroupSel);
   const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
+  const setCurrentThreadId = useSetRecoilState(currentThreadIdAtom);
   const setRealViewModal = useSetRecoilState(realViewModalAtom);
   const setDetailModal = useSetRecoilState(detailModalAtom);
-  const setDetailModalContents = useSetRecoilState(detailModalContentsAtom);
+  const setMouseoverBeadId = useSetRecoilState(mouseoverBeadIdAtom);
   const setMouseoverBeadPosition = useSetRecoilState(mouseoverBeadPositionAtom);
   const setBeadActionModal = useSetRecoilState(beadActionModalAtom);
+  const setThreadModifyModal = useSetRecoilState(threadModifyModalAtom);
+  const [selectStartPoint, setSelectStartPoint] =
+    useRecoilState(selectStartPointAtom);
   const beadShape = useRecoilValue(beadShapeAtom);
   const beadworkInfo = useRecoilValue(currentBeadworkInfoAtom);
+  const selectedBeads = useRecoilValue(selectedBeadsAtom);
+  const setExclusiveBeads = useSetRecoilState(exclusiveBeadsAtom);
 
   useEffect(() => {
     tableInit();
@@ -54,8 +68,10 @@ export default function BeadworkTable() {
 
   useEffect(() => {
     if (beadworkInfo) {
-      beadworkText(beadworkInfo);
+      return beadworkText(beadworkInfo);
     }
+
+    return () => {};
   }, [beadworkInfo]);
 
   useEffect(() => {
@@ -64,6 +80,7 @@ export default function BeadworkTable() {
 
   useEffect(() => {
     tableBeadDrawing(beadingGroupData, beadShape);
+    return tableTextDrawing(beadingGroupData);
   }, [beadingGroupData, beadShape]);
 
   useEffect(() => {
@@ -72,37 +89,46 @@ export default function BeadworkTable() {
 
   useEffect(() => {
     tableSorting();
+  }, [beadsGroupData, beadShape, beadsMap, threadsGroup]);
+
+  useEffect(() => {
+    return tableUngroupIconDrawing(beadsGroupData);
+  }, [beadsGroupData]);
+
+  useEffect(() => {
+    clickEvent(
+      beadShape,
+      setCurrentBeadId,
+      setRealViewModal,
+      setSelectStartPoint,
+      beadingGroupData,
+      setExclusiveBeads,
+      setCurrentThreadId,
+      setThreadModifyModal,
+      threadsGroup,
+    );
   }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
 
   useEffect(() => {
-    clickEvent(beadShape, setCurrentBeadId, setRealViewModal);
     mouseOverEvent(
       setDetailModal,
-      setDetailModalContents,
       setBeadActionModal,
       setMouseoverBeadPosition,
-      beadsMap,
+      setMouseoverBeadId,
     );
-  }, [beadingGroupData, beadShape, beadsMap, threadsGroup]);
+  }, [beadsGroupData, beadShape, beadsMap, threadsGroup]);
 
   useEffect(() => {
     zoomPanning();
   }, []);
 
   useEffect(() => {
-    return hightlightCurrentBead(currentBeadId);
-  }, [currentBeadId]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      d3.select(`#group6374964d690ff5cb4a2f739a`)
-        .append('circle')
-        .attr('cx', 100)
-        .attr('cy', 200)
-        .attr('r', 50)
-        .attr('fill', 'black');
-    }, 1000);
-  });
+    return hightlightCurrentBead(
+      currentBeadId,
+      selectStartPoint,
+      selectedBeads,
+    );
+  }, [currentBeadId, selectStartPoint, selectedBeads]);
 
   return <Canvas className="canvas" color={COLOR} />;
 }

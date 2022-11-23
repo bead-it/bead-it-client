@@ -4,16 +4,20 @@ import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';
 
+import { useRouter } from 'next/router';
 import ProfileIcon from '../atoms/profileicon';
 import ProfileModal from '../modals/profilemodal';
 import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
 import { login } from '../../service/auth';
 import refreshUser from '../../utils/authutil/refreshuser';
-import AddBeadButton from './addbeadbutton';
+import AddBeadButton from '../molecules/addbeadbutton';
 import HomeButton from './homebutton';
+import AddBeadworkButton from '../atoms/addbeadworkbutton';
 
 export default function Navbar({ title }) {
+  const router = useRouter();
+
   const profileIconRef = useRef(null);
 
   const [deviceWindowSize, setDeviceWindowSize] =
@@ -59,7 +63,8 @@ export default function Navbar({ title }) {
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
-        <AddBeadButton />
+        <AddBeadworkButton />
+        {router.pathname === '/beadwork/[beadworkId]' && <AddBeadButton />}
         {!user.id ? (
           <Login src={loginUrl} alt="Google login" onClick={loginHandler} />
         ) : (

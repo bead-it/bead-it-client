@@ -24,7 +24,7 @@ const apiErrorHandler = async (
       }
 
       if (errorCallback) {
-        errorCallback(apiExecResult);
+        return errorCallback(apiExecResult);
       }
 
       return apiExecResult;

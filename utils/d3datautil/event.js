@@ -1,21 +1,69 @@
 import * as d3 from 'd3';
+import COLOR from '../../constants/colors';
 
-const clickEvent = (beadShape, setCurrentBeadId, setRealViewModal) => {
-  d3.select('g')
+const clickEvent = (
+  beadShape,
+  setCurrentBeadId,
+  setRealViewModal,
+  setSelectStartPoint,
+  beadingGroupData,
+  setExclusiveBeads,
+  setCurrentThreadId,
+  setThreadModifyModal,
+  threadsGroup,
+) => {
+  d3.select('#beadGroups')
     .selectAll(beadShape)
     .on('click', e => {
       e.stopPropagation();
       setCurrentBeadId(e.target.getAttribute('id').slice(4));
       setRealViewModal(true);
     });
+
+  d3.select('#beadworkContents').on('click', e => {
+    e.stopPropagation();
+    setSelectStartPoint(true);
+  });
+
+  d3.selectAll('#groupIcon').on('click', e => {
+    e.stopPropagation();
+    setExclusiveBeads(prev => [
+      ...prev,
+      ...beadingGroupData[e.target.getAttribute('groupId')].beads.map(bead =>
+        bead.id.slice(4),
+      ),
+    ]);
+  });
+
+  d3.select('#topGroup')
+    .selectAll('path')
+    .on('click', e => {
+      e.stopPropagation();
+
+      const pathId = e.target.id;
+
+      let pathGroupThreads;
+      threadsGroup.forEach(group => {
+        if (group.id === pathId) {
+          pathGroupThreads = group.threads;
+        }
+      });
+
+      if (pathGroupThreads.length > 1) {
+        window.alert('Please ungroup before editing thread.');
+        return;
+      }
+
+      setCurrentThreadId(pathGroupThreads[0]);
+      setThreadModifyModal(true);
+    });
 };
 
 const mouseOverEvent = (
   setDetailModal,
-  setDetailModalContents,
   setActionModal,
   setMouseoverBeadPosition,
-  beadsMap,
+  setMouseoverBeadId,
 ) => {
   d3.select('#topGroup')
     .selectAll('circle')
@@ -24,36 +72,85 @@ const mouseOverEvent = (
 
       const beadId = e.target.id.slice(4);
       const boundingRect = e.target.getBoundingClientRect();
+
       setMouseoverBeadPosition({
         x: boundingRect.left,
         y: boundingRect.top,
         width: boundingRect.width,
         height: boundingRect.height,
       });
-      setDetailModalContents({
-        url: beadsMap[beadId].page.url,
-        title: beadsMap[beadId].page.title,
-      });
+
+      setMouseoverBeadId(beadId);
       setDetailModal(true);
       setActionModal(true);
     });
 
   d3.select('#topGroup')
-    .selectAll('*')
+    .selectAll('circle')
     .on('mouseout', e => {
       e.stopPropagation();
       setDetailModal(false);
       setActionModal(false);
     });
+
+  d3.select('#topGroup')
+    .selectAll('path')
+    .on('mouseover', e => {
+      e.stopPropagation();
+
+      const pathId = e.target.id;
+
+      d3.selectAll(`#${pathId}`).attr('stroke', `${COLOR.red}`);
+    });
+
+  d3.select('#topGroup')
+    .selectAll('path')
+    .on('mouseout', e => {
+      e.stopPropagation();
+
+      const pathId = e.target.id;
+
+      d3.selectAll(`#${pathId}`).attr('stroke', `${COLOR.gray}`);
+    });
 };
 
-const hightlightCurrentBead = currentBeadId => {
+const hightlightCurrentBead = (
+  currentBeadId,
+  selectStartPoint,
+  selectedBeads,
+) => {
+  if (selectStartPoint) {
+    d3.select('#beadworkContents').select('rect').attr('stroke-width', 10);
+  }
+
+  if (selectedBeads.length > 0) {
+    selectedBeads.forEach(beadId => {
+      d3.select(`#bead${beadId}`)
+        .attr('stroke', 'orange')
+        .attr('stroke-width', 10);
+    });
+  }
+
   if (currentBeadId) {
-    d3.select(`#bead${currentBeadId}`).attr('stroke-width', 10);
+    d3.select(`#bead${currentBeadId}`)
+      .attr('stroke', 'white')
+      .attr('stroke-width', 10);
   }
 
   return () => {
-    d3.select(`#bead${currentBeadId}`).attr('stroke-width', 4);
+    if (currentBeadId) {
+      d3.select(`#bead${currentBeadId}`).attr('stroke-width', 4);
+    }
+    if (selectStartPoint) {
+      d3.select('#beadworkContents').select('rect').attr('stroke-width', 4);
+    }
+    if (selectedBeads.length > 0) {
+      selectedBeads.forEach(beadId => {
+        d3.select(`#bead${beadId}`)
+          .attr('stroke', 'white')
+          .attr('stroke-width', 4);
+      });
+    }
   };
 };
 

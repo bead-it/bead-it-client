@@ -14,6 +14,9 @@ const Wrapper = styled.div`
   border-radius: 3px;
   color: blue;
   background-color: green;
+
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 SubmitButton.propTypes = {
