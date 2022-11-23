@@ -8,13 +8,20 @@ const makeThreadGroup = (threads, beadsGroups) => {
 
   const threadGroupObject = {};
   threads.forEach(thread => {
-    const threadGroupId = `group${thread.source}${thread.target}`;
+    const { _id: threadId } = thread;
+
+    const threadGroupId = `path${beadToGroupMap[thread.source]}${
+      beadToGroupMap[thread.target]
+    }`;
     if (!threadGroupObject[threadGroupId]) {
       threadGroupObject[threadGroupId] = {
         id: threadGroupId,
         source: beadToGroupMap[thread.source],
         target: beadToGroupMap[thread.target],
+        threads: [threadId],
       };
+    } else {
+      threadGroupObject[threadGroupId].threads.push(threadId);
     }
   });
 

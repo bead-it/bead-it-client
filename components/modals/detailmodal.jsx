@@ -3,13 +3,13 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import {
   detailModalAtom,
-  detailModalContentsAtom,
   mouseoverBeadPositionAtom,
 } from '../../recoilstore/atoms';
+import { detailModalContentsSel } from '../../recoilstore/seletors';
 
 export default function DetailModal() {
   const modalOpen = useRecoilValue(detailModalAtom);
-  const detailModalContents = useRecoilValue(detailModalContentsAtom);
+  const detailModalContents = useRecoilValue(detailModalContentsSel);
   const mouseoverBeadPosition = useRecoilValue(mouseoverBeadPositionAtom);
   const [modalPosition, setModalPosition] = useState({});
 

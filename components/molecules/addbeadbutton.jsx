@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { AiOutlinePlusCircle as CreateIcon } from 'react-icons/ai';
+import { AiFillPlusCircle as CreateIcon } from 'react-icons/ai';
 
 import {
+  beadCreationModalAtom,
   beadsReceivedAtom,
   currentBeadIdAtom,
   currentBeadworkInfoAtom,
   inputModalAtom,
+  selectStartPointAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
@@ -15,32 +17,35 @@ import { userInfoSel } from '../../recoilstore/seletors';
 import apiErrorHandler from '../../service/apierrorhandler';
 import { postBeadData } from '../../service/beadapi';
 import { postThreadData } from '../../service/threadapi';
-import InputModal from '../modals/inputmodal';
-import Message from '../atoms/message';
-import Input from '../atoms/input';
-import SubmitButton from '../atoms/submitbutton';
-import CancleButton from '../atoms/canclebutton';
+import CustomInputModal from './customInputModal';
 
 export default function AddBeadButton() {
   const setInputModal = useSetRecoilState(inputModalAtom);
-  const [url, setUrl] = useState('');
   const user = useRecoilValue(userInfoSel);
   const beadwork = useRecoilValue(currentBeadworkInfoAtom);
   const [token, setToken] = useRecoilState(tokenInfoAtom);
   const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
   const setBeadsData = useSetRecoilState(beadsReceivedAtom);
   const setThreadsData = useSetRecoilState(threadsReceivedAtom);
+  const selectStartPoint = useRecoilValue(selectStartPointAtom);
+  const [beadCreationModal, setBeadCreationModal] = useRecoilState(
+    beadCreationModalAtom,
+  );
+
+  useEffect(() => {
+    if (beadCreationModal) {
+      setInputModal(true);
+    }
+  }, [beadCreationModal]);
 
   const createBeadModalOpen = e => {
     e.stopPropagation();
-    if (currentBeadId) {
-      setInputModal(true);
+    if (currentBeadId || selectStartPoint) {
+      setBeadCreationModal(true);
     }
   };
 
-  const doCreateBead = async e => {
-    e.stopPropagation();
-
+  const doCreateBead = async url => {
     const { _id: beadworkId } = beadwork;
 
     const newBeadData = await apiErrorHandler(
@@ -48,10 +53,26 @@ export default function AddBeadButton() {
         const response = await postBeadData(user.id, beadworkId, token, url);
         return response;
       },
-      null,
+      errorResult => {
+        if (process.env.NODE_ENV === 'development') {
+          window.alert(errorResult.message);
+        }
+        return null;
+      },
       { setToken },
     );
+    if (!newBeadData) {
+      return;
+    }
+
     const { _id: newBeadId } = newBeadData;
+
+    if (selectStartPoint) {
+      setBeadsData(prev => [...prev, newBeadData]);
+      setInputModal(false);
+      setCurrentBeadId(newBeadId);
+      return;
+    }
 
     const newThreadData = await apiErrorHandler(
       async () => {
@@ -64,36 +85,45 @@ export default function AddBeadButton() {
         );
         return response;
       },
-      null,
+      errorResult => {
+        if (process.env.NODE_ENV === 'development') {
+          window.alert(errorResult.message);
+        }
+        return null;
+      },
       { setToken },
     );
+    if (!newThreadData) {
+      return;
+    }
 
     setBeadsData(prev => [...prev, newBeadData]);
 
     setThreadsData(prev => [...prev, newThreadData]);
 
+    setBeadCreationModal(false);
     setInputModal(false);
     setCurrentBeadId(newBeadId);
   };
 
-  const cancleCreateBead = e => {
-    e.stopPropagation();
-    setInputModal(false);
-  };
-
   return (
     <>
-      <Wrapper active={currentBeadId} onClick={createBeadModalOpen}>
+      <Wrapper
+        active={currentBeadId || selectStartPoint}
+        onClick={createBeadModalOpen}
+      >
         <CreateIcon size={24} />
       </Wrapper>
-      <InputModal>
-        <Message text="Input url below." />
-        <Input name="URL" input={url} setInput={setUrl} />
-        <Buttons>
-          <SubmitButton clickHandler={doCreateBead} />
-          <CancleButton clickHandler={cancleCreateBead} />
-        </Buttons>
-      </InputModal>
+      {beadCreationModal && (
+        <CustomInputModal
+          message="Input url below."
+          name1="URL"
+          submitHandler={doCreateBead}
+          cancleHandler={() => {
+            setBeadCreationModal(false);
+          }}
+        />
+      )}
     </>
   );
 }
@@ -112,13 +142,4 @@ const Wrapper = styled.div`
   border: 1px solid black;
   border-radius: 5px;
   background-color: ${props => (props.active ? '#dec000' : 'gray')};
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-
-  width: 95%;
 `;

@@ -21,11 +21,6 @@ const detailModalAtom = atom({
   default: false,
 });
 
-const detailModalContentsAtom = atom({
-  key: `detailModalContentsAtom/${v4()}`,
-  default: {},
-});
-
 const mouseoverBeadPositionAtom = atom({
   key: `mouseoverBeadPositionAtom/${v4()}`,
   default: {},
@@ -33,6 +28,16 @@ const mouseoverBeadPositionAtom = atom({
 
 const beadActionModalAtom = atom({
   key: `beadActionModalAtom/${v4()}`,
+  default: false,
+});
+
+const beadCreationModalAtom = atom({
+  key: `beadCreationModalAtom/${v4()}`,
+  default: false,
+});
+
+const threadModifyModalAtom = atom({
+  key: `threadModifyModalAtom/${v4()}`,
   default: false,
 });
 
@@ -71,6 +76,16 @@ const currentBeadIdAtom = atom({
   default: '',
 });
 
+const currentThreadIdAtom = atom({
+  key: `currentThreadIdAtom/${v4()}`,
+  default: '',
+});
+
+const mouseoverBeadIdAtom = atom({
+  key: `mouseoverBeadIdAtom/${v4()}`,
+  default: '',
+});
+
 const currentBeadworkInfoAtom = atom({
   key: `currentBeadworkInfoAtom/${v4()}`,
   default: null,
@@ -81,14 +96,25 @@ const addBeadButtonAtom = atom({
   default: false,
 });
 
+const selectStartPointAtom = atom({
+  key: `selectStartPointAtom/${v4()}`,
+  default: false,
+});
+
+const selectedBeadsAtom = atom({
+  key: `selectedBeadsAtom/${v4()}`,
+  default: [],
+});
+
 export {
   deviceSizeAtom,
   profileModalAtom,
   realViewModalAtom,
   detailModalAtom,
-  detailModalContentsAtom,
   mouseoverBeadPositionAtom,
   beadActionModalAtom,
+  beadCreationModalAtom,
+  threadModifyModalAtom,
   inputModalAtom,
   tokenInfoAtom,
   beadsReceivedAtom,
@@ -96,6 +122,10 @@ export {
   exclusiveBeadsAtom,
   beadShapeAtom,
   currentBeadIdAtom,
+  currentThreadIdAtom,
+  mouseoverBeadIdAtom,
   currentBeadworkInfoAtom,
   addBeadButtonAtom,
+  selectStartPointAtom,
+  selectedBeadsAtom,
 };

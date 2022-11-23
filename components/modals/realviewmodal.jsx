@@ -26,8 +26,6 @@ export default function RealViewModal() {
       selectedBeadData = beadsMap[beadId];
       setSrc(selectedBeadData.page.url);
       setName(selectedBeadData.page.title);
-
-      console.log(src);
     }
   }, [beadId]);
 

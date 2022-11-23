@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { AiOutlinePlusCircle as AddSelectIcon } from 'react-icons/ai';
+import {
+  AiOutlinePlusCircle as AddSelectIcon,
+  AiOutlineMinusCircle as DeleteSelectIcon,
+} from 'react-icons/ai';
 
 import {
   beadActionModalAtom,
+  mouseoverBeadIdAtom,
   mouseoverBeadPositionAtom,
+  selectedBeadsAtom,
 } from '../../recoilstore/atoms';
 
 export default function BeadActionModal() {
   const [modalOpen, setModalOpen] = useRecoilState(beadActionModalAtom);
   const mouseoverBeadPosition = useRecoilValue(mouseoverBeadPositionAtom);
+  const mouseoverBeadId = useRecoilValue(mouseoverBeadIdAtom);
+  const [selectedBeads, setSelectedBeads] = useRecoilState(selectedBeadsAtom);
   const [modalPosition, setModalPosition] = useState({});
 
   useEffect(() => {
@@ -42,7 +49,20 @@ export default function BeadActionModal() {
     setModalOpen(false);
   };
 
-  const selectHandler = () => {};
+  const selectHandler = e => {
+    e.stopPropagation();
+    setSelectedBeads(prev => [...prev, mouseoverBeadId]);
+  };
+
+  const deSelectHandler = e => {
+    e.stopPropagation();
+    setSelectedBeads(prev => {
+      const tempPrev = [...prev];
+      const index = tempPrev.indexOf(mouseoverBeadId);
+      tempPrev.splice(index, 1);
+      return tempPrev;
+    });
+  };
 
   return (
     <Wrapper
@@ -51,7 +71,15 @@ export default function BeadActionModal() {
       onMouseOver={maintainModalOpen}
       onMouseOut={modalClose}
     >
-      <AddSelectIcon onClick={selectHandler} size={24} className="icon" />
+      {selectedBeads.includes(mouseoverBeadId) ? (
+        <ButtonWrapper onClick={deSelectHandler}>
+          <DeleteSelectIcon size={24} className="icon" />
+        </ButtonWrapper>
+      ) : (
+        <ButtonWrapper onClick={selectHandler}>
+          <AddSelectIcon size={24} className="icon" />
+        </ButtonWrapper>
+      )}
     </Wrapper>
   );
 }
@@ -68,11 +96,18 @@ const Wrapper = styled.div`
   top: ${props => `${props.position.y}px`};
   left: ${props => `${props.position.x}px`};
 
-  padding-left: 5px;
-  padding-right: 5px;
-
   border: 1px solid black;
   border-radius: 5px;
   background-color: #dec000;
   opacity: 70%;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
 `;

@@ -19,7 +19,6 @@ const postThreadData = async (
   sourceBeadId,
   targetBeadId,
 ) => {
-  console.log(sourceBeadId, targetBeadId);
   return API({
     method: 'post',
     url: `/users/${userId}/beadworks/${beadworkId}/threads`,
@@ -33,4 +32,15 @@ const postThreadData = async (
   });
 };
 
-export { getAllThreadsData, getThreadData, postThreadData };
+const patchThreadData = async (userId, beadworkId, threadId, token, data) => {
+  return API({
+    method: 'patch',
+    url: `/users/${userId}/beadworks/${beadworkId}/threads/${threadId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data,
+  });
+};
+
+export { getAllThreadsData, getThreadData, postThreadData, patchThreadData };

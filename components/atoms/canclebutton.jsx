@@ -14,6 +14,9 @@ const Wrapper = styled.div`
   border-radius: 3px;
   color: red;
   background-color: orange;
+
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 CancleButton.propTypes = {

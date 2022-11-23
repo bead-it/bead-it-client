@@ -13,6 +13,7 @@ import {
   currentBeadworkInfoAtom,
   profileModalAtom,
   realViewModalAtom,
+  selectStartPointAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
@@ -22,6 +23,7 @@ import { getAllBeadsData } from '../../service/beadapi';
 import { getAllThreadsData } from '../../service/threadapi';
 import { getBeadworkData } from '../../service/beadworkapi';
 import BeadActionModal from '../../components/modals/beadactionmodal';
+import ThreadModifyModal from '../../components/modals/threadmodifymodal';
 
 export default function Beadwork() {
   const setProfileModal = useSetRecoilState(profileModalAtom);
@@ -30,6 +32,7 @@ export default function Beadwork() {
   const setThreadsReceived = useSetRecoilState(threadsReceivedAtom);
   const setCurrentBeadId = useSetRecoilState(currentBeadIdAtom);
   const setCurrentBeadworkInfo = useSetRecoilState(currentBeadworkInfoAtom);
+  const setSelectStartPoint = useSetRecoilState(selectStartPointAtom);
 
   const [token, setToken] = useRecoilState(tokenInfoAtom);
   const user = useRecoilValue(userInfoSel);
@@ -46,11 +49,18 @@ export default function Beadwork() {
             const response = await getBeadworkData(userId, beadworkId, token);
             return response;
           },
-          null,
+          errorResult => {
+            if (process.env.NODE_ENV === 'development') {
+              window.alert(errorResult.message);
+            }
+            return null;
+          },
           { setToken },
         );
 
-        setCurrentBeadworkInfo(beadworkData);
+        if (beadworkData) {
+          setCurrentBeadworkInfo(beadworkData);
+        }
       };
 
       getBeadworkInfoFetching();
@@ -65,7 +75,12 @@ export default function Beadwork() {
             const response = await getAllBeadsData(userId, beadworkId, token);
             return response;
           },
-          null,
+          errorResult => {
+            if (process.env.NODE_ENV === 'development') {
+              window.alert(errorResult.message);
+            }
+            return null;
+          },
           { setToken },
         );
         const threadsData = await apiErrorHandler(
@@ -73,7 +88,12 @@ export default function Beadwork() {
             const response = await getAllThreadsData(userId, beadworkId, token);
             return response;
           },
-          null,
+          errorResult => {
+            if (process.env.NODE_ENV === 'development') {
+              window.alert(errorResult.message);
+            }
+            return null;
+          },
           { setToken },
         );
 
@@ -93,7 +113,8 @@ export default function Beadwork() {
     e.stopPropagation();
     setProfileModal(false);
     setRealViewModal(false);
-    setCurrentBeadId(null);
+    setCurrentBeadId('');
+    setSelectStartPoint(false);
   };
 
   return (
@@ -103,6 +124,7 @@ export default function Beadwork() {
       <RealViewModal />
       <DetailModal />
       <BeadActionModal />
+      <ThreadModifyModal />
     </Wrapper>
   );
 }

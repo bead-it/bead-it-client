@@ -1,21 +1,16 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { inputModalAtom } from '../../recoilstore/atoms';
 
 export default function InputModal({ children }) {
-  const [inputModal, setInputModal] = useRecoilState(inputModalAtom);
-
-  const modalHandler = e => {
-    e.stopPropagation();
-    setInputModal(prev => !prev);
-  };
+  const inputModal = useRecoilValue(inputModalAtom);
 
   return (
     <>
-      <Outer onClick={modalHandler} modalOpen={inputModal} />
+      <Outer onClick={e => e.stopPropagation()} modalOpen={inputModal} />
       <Inner onClick={e => e.stopPropagation()} modalOpen={inputModal}>
         {children}
       </Inner>

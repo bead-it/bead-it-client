@@ -5,6 +5,7 @@ import {
   beadShapeAtom,
   beadsReceivedAtom,
   exclusiveBeadsAtom,
+  mouseoverBeadIdAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
 } from './atoms';
@@ -112,6 +113,23 @@ const userInfoSel = selector({
   },
 });
 
+const detailModalContentsSel = selector({
+  key: `detailModalContentsSel/${v4()}`,
+  get: ({ get }) => {
+    const beadsMap = get(beadsMapSel);
+    const beadId = get(mouseoverBeadIdAtom);
+
+    if (beadId) {
+      return {
+        url: beadsMap[beadId]?.page.url,
+        title: beadsMap[beadId]?.page.title,
+      };
+    }
+
+    return {};
+  },
+});
+
 export {
   beadsMapSel,
   threadsMapSel,
@@ -119,4 +137,5 @@ export {
   threadsGroupSel,
   beadingGroupSel,
   userInfoSel,
+  detailModalContentsSel,
 };

@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import COLOR from '../../constants/colors';
 
 const beadworkText = beadworkInfo => {
   const titleList = [];
@@ -22,19 +23,25 @@ const beadworkText = beadworkInfo => {
   const totalHeight = titleHeight + descriptionHeight;
   const yStartPoint = 300 - totalHeight / 2;
 
-  d3.select('g')
+  d3.select('#beadworkContents')
     .append('rect')
     .attr('x', 150)
     .attr('y', yStartPoint - 50)
     .attr('width', 300)
     .attr('height', totalHeight + 50)
     .attr('rx', 10)
-    .attr('fill', 'none')
-    .attr('stroke', 'orange')
-    .attr('stroke-width', 5);
+    .attr('fill', COLOR.gray)
+    .attr('stroke', 'white')
+    .attr('stroke-width', 4);
 
-  const textTitle = d3.select('g').append('text');
-  const textDescription = d3.select('g').append('text');
+  const textTitle = d3
+    .select('#beadworkContents')
+    .append('text')
+    .attr('id', 'textTitle');
+  const textDescription = d3
+    .select('#beadworkContents')
+    .append('text')
+    .attr('id', 'textDescription');
 
   textTitle
     .selectAll('tspan')
@@ -52,6 +59,10 @@ const beadworkText = beadworkInfo => {
     .text(d => d)
     .attr('x', 180)
     .attr('y', (d, i) => yStartPoint + titleHeight + 20 * i);
+
+  return () => {
+    d3.select('#beadworkContents').selectAll('*').remove();
+  };
 };
 
 export default beadworkText;

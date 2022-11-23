@@ -6,8 +6,13 @@ const API = axios.create({
 });
 
 const responseHandler = response => {
-  const received = response.data;
+  if (response.status === 204) {
+    return {
+      result: 'ok',
+    };
+  }
 
+  const received = response.data;
   return received;
 };
 
