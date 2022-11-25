@@ -14,11 +14,13 @@ export default function CustomInputModal({
   message,
   name1,
   name2,
+  defaultValue1,
+  defaultValue2,
   submitHandler,
   cancleHandler,
 }) {
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
+  const [input1, setInput1] = useState(defaultValue1);
+  const [input2, setInput2] = useState(defaultValue2);
   const setInputModal = useSetRecoilState(inputModalAtom);
 
   return (
@@ -53,12 +55,15 @@ CustomInputModal.propTypes = {
   message: PropTypes.string.isRequired,
   name1: PropTypes.string.isRequired,
   name2: PropTypes.string,
+  defaultValue1: PropTypes.string.isRequired,
+  defaultValue2: PropTypes.string,
   submitHandler: PropTypes.func.isRequired,
   cancleHandler: PropTypes.func.isRequired,
 };
 
 CustomInputModal.defaultProps = {
   name2: '',
+  defaultValue2: '',
 };
 
 const Buttons = styled.div`

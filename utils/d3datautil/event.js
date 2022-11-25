@@ -4,7 +4,7 @@ import COLOR from '../../constants/colors';
 const clickEvent = (
   beadShape,
   setCurrentBeadId,
-  setRealViewModal,
+  setWebViewModal,
   setSelectStartPoint,
   beadingGroupData,
   setExclusiveBeads,
@@ -17,7 +17,7 @@ const clickEvent = (
     .on('click', e => {
       e.stopPropagation();
       setCurrentBeadId(e.target.getAttribute('id').slice(4));
-      setRealViewModal(true);
+      setWebViewModal(true);
     });
 
   d3.select('#beadworkContents').on('click', e => {

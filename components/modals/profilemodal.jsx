@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
-import { logout } from '../../service/auth';
+import { logout } from '../../service/authapi';
 import refreshUser from '../../utils/authutil/refreshuser';
 
 export default function ProfileModal({ profileIconRef }) {

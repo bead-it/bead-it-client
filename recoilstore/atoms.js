@@ -11,8 +11,8 @@ const profileModalAtom = atom({
   default: false,
 });
 
-const realViewModalAtom = atom({
-  key: `realViewModalAtom/${v4()}`,
+const webViewModalAtom = atom({
+  key: `webViewModalAtom/${v4()}`,
   default: false,
 });
 
@@ -106,10 +106,23 @@ const selectedBeadsAtom = atom({
   default: [],
 });
 
+const currentSrcAtom = atom({
+  key: `currentSrcAtom/${v4()}`,
+  default: '',
+});
+
+const srcHistoryAtom = atom({
+  key: `srcHistoryAtom/${v4()}`,
+  default: {
+    pos: -1,
+    stack: [],
+  },
+});
+
 export {
   deviceSizeAtom,
   profileModalAtom,
-  realViewModalAtom,
+  webViewModalAtom,
   detailModalAtom,
   mouseoverBeadPositionAtom,
   beadActionModalAtom,
@@ -128,4 +141,6 @@ export {
   addBeadButtonAtom,
   selectStartPointAtom,
   selectedBeadsAtom,
+  currentSrcAtom,
+  srcHistoryAtom,
 };
