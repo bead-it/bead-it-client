@@ -5,14 +5,14 @@ import { useRouter } from 'next/router';
 
 import Navbar from '../../components/navbar';
 import BeadworkTable from '../../components/beadworktable';
-import RealViewModal from '../../components/modals/realviewmodal';
+import WebViewModal from '../../components/modals/webviewmodal';
 import DetailModal from '../../components/modals/detailmodal';
 import {
   beadsReceivedAtom,
   currentBeadIdAtom,
   currentBeadworkInfoAtom,
   profileModalAtom,
-  realViewModalAtom,
+  webViewModalAtom,
   selectStartPointAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
@@ -27,7 +27,7 @@ import ThreadModifyModal from '../../components/modals/threadmodifymodal';
 
 export default function Beadwork() {
   const setProfileModal = useSetRecoilState(profileModalAtom);
-  const setRealViewModal = useSetRecoilState(realViewModalAtom);
+  const setWebViewModal = useSetRecoilState(webViewModalAtom);
   const setBeadsReceived = useSetRecoilState(beadsReceivedAtom);
   const setThreadsReceived = useSetRecoilState(threadsReceivedAtom);
   const setCurrentBeadId = useSetRecoilState(currentBeadIdAtom);
@@ -112,7 +112,7 @@ export default function Beadwork() {
   const closeModals = e => {
     e.stopPropagation();
     setProfileModal(false);
-    setRealViewModal(false);
+    setWebViewModal(false);
     setCurrentBeadId('');
     setSelectStartPoint(false);
   };
@@ -121,7 +121,7 @@ export default function Beadwork() {
     <Wrapper onClick={closeModals}>
       <BeadworkTable />
       <Navbar />
-      <RealViewModal />
+      <WebViewModal />
       <DetailModal />
       <BeadActionModal />
       <ThreadModifyModal />

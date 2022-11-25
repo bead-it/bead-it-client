@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-  timeout: 1500,
+  timeout: 2000,
 });
 
 const responseHandler = response => {
@@ -23,7 +23,12 @@ const errorHandler = error => {
     return received;
   }
 
-  throw new Error(error);
+  const response = {
+    result: 'error',
+    error,
+  };
+
+  return response;
 };
 
 API.interceptors.response.use(responseHandler, errorHandler);

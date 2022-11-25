@@ -8,6 +8,7 @@ import {
   beadsReceivedAtom,
   currentBeadIdAtom,
   currentBeadworkInfoAtom,
+  currentSrcAtom,
   inputModalAtom,
   selectStartPointAtom,
   threadsReceivedAtom,
@@ -31,6 +32,7 @@ export default function AddBeadButton() {
   const [beadCreationModal, setBeadCreationModal] = useRecoilState(
     beadCreationModalAtom,
   );
+  const src = useRecoilValue(currentSrcAtom);
 
   useEffect(() => {
     if (beadCreationModal) {
@@ -118,6 +120,7 @@ export default function AddBeadButton() {
         <CustomInputModal
           message="Input url below."
           name1="URL"
+          defaultValue1={src}
           submitHandler={doCreateBead}
           cancleHandler={() => {
             setBeadCreationModal(false);

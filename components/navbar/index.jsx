@@ -9,7 +9,7 @@ import ProfileIcon from '../atoms/profileicon';
 import ProfileModal from '../modals/profilemodal';
 import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
-import { login } from '../../service/auth';
+import { login } from '../../service/authapi';
 import refreshUser from '../../utils/authutil/refreshuser';
 import AddBeadButton from '../molecules/addbeadbutton';
 import HomeButton from './homebutton';
@@ -63,7 +63,7 @@ export default function Navbar({ title }) {
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
-        <AddBeadworkButton />
+        {user.id && <AddBeadworkButton />}
         {router.pathname === '/beadwork/[beadworkId]' && <AddBeadButton />}
         {!user.id ? (
           <Login src={loginUrl} alt="Google login" onClick={loginHandler} />

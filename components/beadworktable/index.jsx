@@ -31,7 +31,7 @@ import {
   currentBeadIdAtom,
   currentBeadworkInfoAtom,
   detailModalAtom,
-  realViewModalAtom,
+  webViewModalAtom,
   mouseoverBeadPositionAtom,
   beadActionModalAtom,
   selectStartPointAtom,
@@ -49,7 +49,7 @@ export default function BeadworkTable() {
   const threadsGroup = useRecoilValue(threadsGroupSel);
   const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
   const setCurrentThreadId = useSetRecoilState(currentThreadIdAtom);
-  const setRealViewModal = useSetRecoilState(realViewModalAtom);
+  const setWebViewModal = useSetRecoilState(webViewModalAtom);
   const setDetailModal = useSetRecoilState(detailModalAtom);
   const setMouseoverBeadId = useSetRecoilState(mouseoverBeadIdAtom);
   const setMouseoverBeadPosition = useSetRecoilState(mouseoverBeadPositionAtom);
@@ -99,7 +99,7 @@ export default function BeadworkTable() {
     clickEvent(
       beadShape,
       setCurrentBeadId,
-      setRealViewModal,
+      setWebViewModal,
       setSelectStartPoint,
       beadingGroupData,
       setExclusiveBeads,
