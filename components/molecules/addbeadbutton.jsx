@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AiFillPlusCircle as CreateIcon } from 'react-icons/ai';
 
-import { useRouter } from 'next/router';
+import CustomInputModal from './customInputModal';
+
+import apiErrorHandler from '../../service/apierrorhandler';
+import { postBeadData } from '../../service/beadapi';
+import { postThreadData } from '../../service/threadapi';
+
 import {
   beadCreationModalAtom,
   beadsReceivedAtom,
@@ -16,26 +22,24 @@ import {
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { postBeadData } from '../../service/beadapi';
-import { postThreadData } from '../../service/threadapi';
-import CustomInputModal from './customInputModal';
 
 export default function AddBeadButton() {
   const router = useRouter();
 
-  const setInputModal = useSetRecoilState(inputModalAtom);
-  const user = useRecoilValue(userInfoSel);
-  const beadwork = useRecoilValue(currentBeadworkInfoAtom);
-  const [token, setToken] = useRecoilState(tokenInfoAtom);
-  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
-  const setBeadsData = useSetRecoilState(beadsReceivedAtom);
-  const setThreadsData = useSetRecoilState(threadsReceivedAtom);
-  const selectStartPoint = useRecoilValue(selectStartPointAtom);
   const [beadCreationModal, setBeadCreationModal] = useRecoilState(
     beadCreationModalAtom,
   );
+  const [token, setToken] = useRecoilState(tokenInfoAtom);
+  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
+
+  const setInputModal = useSetRecoilState(inputModalAtom);
+  const setBeadsData = useSetRecoilState(beadsReceivedAtom);
+  const setThreadsData = useSetRecoilState(threadsReceivedAtom);
+
+  const user = useRecoilValue(userInfoSel);
+  const beadwork = useRecoilValue(currentBeadworkInfoAtom);
   const src = useRecoilValue(currentSrcAtom);
+  const selectStartPoint = useRecoilValue(selectStartPointAtom);
 
   useEffect(() => {
     if (beadCreationModal) {
@@ -71,38 +75,33 @@ export default function AddBeadButton() {
 
     const { _id: newBeadId } = newBeadData;
 
-    if (selectStartPoint) {
-      setBeadsData(prev => [...prev, newBeadData]);
-      setInputModal(false);
-      setCurrentBeadId(newBeadId);
-      return;
-    }
+    if (!selectStartPoint) {
+      const newThreadData = await apiErrorHandler(
+        async () => {
+          const response = await postThreadData(
+            user.id,
+            beadworkId,
+            token,
+            currentBeadId,
+            newBeadId,
+          );
+          return response;
+        },
+        errorResult => {
+          window.alert(errorResult.message);
+          return null;
+        },
+        { setToken, router },
+      );
 
-    const newThreadData = await apiErrorHandler(
-      async () => {
-        const response = await postThreadData(
-          user.id,
-          beadworkId,
-          token,
-          currentBeadId,
-          newBeadId,
-        );
-        return response;
-      },
-      errorResult => {
-        window.alert(errorResult.message);
-        return null;
-      },
-      { setToken, router },
-    );
+      if (!newThreadData) {
+        return;
+      }
 
-    if (!newThreadData) {
-      return;
+      setThreadsData(prev => [...prev, newThreadData]);
     }
 
     setBeadsData(prev => [...prev, newBeadData]);
-
-    setThreadsData(prev => [...prev, newThreadData]);
 
     setBeadCreationModal(false);
     setInputModal(false);

@@ -1,15 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Navbar from '../../components/navbar';
-import { profileModalAtom } from '../../recoilstore/atoms';
 import UserInfo from '../../components/mypages/userinfo';
 import MyWorks from '../../components/mypages/myworks';
 import SharedWorks from '../../components/mypages/sharedworks';
 
+import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+import apiErrorHandler from '../../service/apierrorhandler';
+import { getUserData } from '../../service/userapi';
+import { userInfoSel } from '../../recoilstore/seletors';
+
 export default function Mypage() {
+  const router = useRouter();
+
+  const [token, setToken] = useRecoilState(tokenInfoAtom);
+
   const setProfileModal = useSetRecoilState(profileModalAtom);
+
+  const currentUserData = useRecoilValue(userInfoSel);
+
+  const [myData, setMyData] = useState({});
+
+  useEffect(() => {
+    const getUserInfoFetching = async () => {
+      const userData = await apiErrorHandler(
+        async () => {
+          const response = await getUserData(currentUserData.id, token);
+          return response;
+        },
+        errorResult => {
+          window.alert(errorResult.message);
+          return null;
+        },
+        { setToken, router },
+      );
+
+      if (userData) {
+        setMyData(userData);
+      }
+    };
+
+    if (currentUserData && token) {
+      getUserInfoFetching();
+    }
+  }, [currentUserData, token]);
 
   const closeModals = e => {
     e.stopPropagation();
@@ -20,14 +57,14 @@ export default function Mypage() {
     <Wrapper onClick={closeModals}>
       <Navbar />
       <UserInfoWrapper>
-        <UserInfo />
+        <UserInfo myData={myData} />
       </UserInfoWrapper>
       <Beadworks>
         <MyWorksWrapper>
-          <MyWorks />
+          <MyWorks myData={myData} />
         </MyWorksWrapper>
         <SharedWorksWrapper>
-          <SharedWorks />
+          <SharedWorks myData={myData} />
         </SharedWorksWrapper>
       </Beadworks>
     </Wrapper>

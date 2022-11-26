@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-
 import { AiFillHome as HomeIcon } from 'react-icons/ai';
 
 export default function HomeButton() {

@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useSetRecoilState } from 'recoil';
 
-import PROFILE_SIZE from '../../constants/profileicon';
 import { profileModalAtom } from '../../recoilstore/atoms';
+
+import PROFILE_SIZE from '../../constants/profileicon';
 
 const ProfileIcon = forwardRef(({ src, alt, size, option }, ref) => {
   const setModalOpen = useSetRecoilState(profileModalAtom);

@@ -1,42 +1,10 @@
-import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React from 'react';
 import styled from 'styled-components';
-import { tokenInfoAtom } from '../../recoilstore/atoms';
-import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { getUserData } from '../../service/userapi';
+import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
-export default function MyWorks() {
-  const currentUserData = useRecoilValue(userInfoSel);
-  const [token, setToken] = useRecoilState(tokenInfoAtom);
-  const [myData, setMyData] = useState({});
-
+export default function MyWorks({ myData }) {
   const router = useRouter();
-
-  useEffect(() => {
-    const getUserInfoFetching = async () => {
-      const userData = await apiErrorHandler(
-        async () => {
-          const response = await getUserData(currentUserData.id, token);
-          return response;
-        },
-        errorResult => {
-          window.alert(errorResult.message);
-          return null;
-        },
-        { setToken, router },
-      );
-
-      if (userData) {
-        setMyData(userData);
-      }
-    };
-
-    if (currentUserData && token) {
-      getUserInfoFetching();
-    }
-  }, [currentUserData, token]);
 
   const toBeadworkPage = (e, beadworkId) => {
     e.stopPropagation();
@@ -70,6 +38,10 @@ export default function MyWorks() {
     </Wrapper>
   );
 }
+
+MyWorks.propTypes = {
+  myData: PropTypes.object.isRequired,
+};
 
 const Wrapper = styled.div`
   display: flex;

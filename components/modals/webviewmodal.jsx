@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   AiOutlineExpandAlt as ExpandIcon,
@@ -9,7 +10,11 @@ import {
   AiFillCaretRight as GoForwardIcon,
 } from 'react-icons/ai';
 
-import { useRouter } from 'next/router';
+import getPageData from '../../service/pageapi';
+import apiErrorHandler from '../../service/apierrorhandler';
+import replaceRefs from '../../utils/previewpage/replacerefs';
+import findUrlToGo from '../../utils/previewpage/findurltogo';
+
 import {
   currentBeadIdAtom,
   currentSrcAtom,
@@ -17,19 +22,17 @@ import {
   srcHistoryAtom,
 } from '../../recoilstore/atoms';
 import { beadsMapSel } from '../../recoilstore/seletors';
-import getPageData from '../../service/pageapi';
-import apiErrorHandler from '../../service/apierrorhandler';
-import replaceRefs from '../../utils/previewpage/replacerefs';
-import findUrlToGo from '../../utils/previewpage/findurltogo';
 
 export default function WebViewModal() {
   const router = useRouter();
 
+  const [src, setSrc] = useRecoilState(currentSrcAtom);
+  const [srcHistory, setSrcHistory] = useRecoilState(srcHistoryAtom);
+
   const modalOpen = useRecoilValue(webViewModalAtom);
   const beadId = useRecoilValue(currentBeadIdAtom);
   const beadsMap = useRecoilValue(beadsMapSel);
-  const [src, setSrc] = useRecoilState(currentSrcAtom);
-  const [srcHistory, setSrcHistory] = useRecoilState(srcHistoryAtom);
+
   const [largeModal, setLargeModal] = useState(false);
   const [addressValue, setAddressValue] = useState('');
   const [injectedHtml, setInjectedHtml] = useState('no data');

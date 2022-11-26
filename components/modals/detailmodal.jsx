@@ -1,50 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
+
 import {
   detailModalAtom,
-  mouseoverBeadPositionAtom,
+  mouseoverElementPositionAtom,
 } from '../../recoilstore/atoms';
 import { detailModalContentsSel } from '../../recoilstore/seletors';
 
 export default function DetailModal() {
   const modalOpen = useRecoilValue(detailModalAtom);
   const detailModalContents = useRecoilValue(detailModalContentsSel);
-  const mouseoverBeadPosition = useRecoilValue(mouseoverBeadPositionAtom);
+  const mouseoverElementPosition = useRecoilValue(mouseoverElementPositionAtom);
+
   const [modalPosition, setModalPosition] = useState({});
 
   useEffect(() => {
     if (
-      mouseoverBeadPosition.y + mouseoverBeadPosition.height / 2 <=
+      mouseoverElementPosition.y + mouseoverElementPosition.height / 2 <=
       window.innerHeight / 2
     ) {
       setModalPosition({
         x:
-          mouseoverBeadPosition.x +
-          mouseoverBeadPosition.width / 2 -
+          mouseoverElementPosition.x +
+          mouseoverElementPosition.width / 2 -
           window.innerWidth * 0.1,
-        y: mouseoverBeadPosition.y + mouseoverBeadPosition.height / 2 + 50,
+        y:
+          mouseoverElementPosition.y + mouseoverElementPosition.height / 2 + 50,
       });
     } else {
       setModalPosition({
         x:
-          mouseoverBeadPosition.x +
-          mouseoverBeadPosition.width / 2 -
+          mouseoverElementPosition.x +
+          mouseoverElementPosition.width / 2 -
           window.innerWidth * 0.1,
         y:
-          mouseoverBeadPosition.y +
-          mouseoverBeadPosition.height / 2 -
+          mouseoverElementPosition.y +
+          mouseoverElementPosition.height / 2 -
           window.innerHeight * 0.3 -
           50,
       });
     }
-  }, [mouseoverBeadPosition]);
+  }, [mouseoverElementPosition]);
 
   return (
     <Wrapper modalOpen={modalOpen} position={modalPosition}>
-      <Title>{detailModalContents.title}</Title>
-      <Domain>{detailModalContents.domain}</Domain>
-      <Url>{detailModalContents.url}</Url>
+      {detailModalContents.title && <Title>{detailModalContents.title}</Title>}
+      {detailModalContents.domain && (
+        <Domain>{detailModalContents.domain}</Domain>
+      )}
+      {detailModalContents.url && <Url>{detailModalContents.url}</Url>}
+      {detailModalContents.content && (
+        <Content>{detailModalContents.content}</Content>
+      )}
     </Wrapper>
   );
 }
@@ -95,6 +103,18 @@ const Domain = styled.div`
 `;
 
 const Url = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 90%;
+
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

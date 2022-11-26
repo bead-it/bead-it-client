@@ -1,6 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import CustomInputModal from '../molecules/customInputModal';
+
+import apiErrorHandler from '../../service/apierrorhandler';
+import { patchThreadData } from '../../service/threadapi';
+
 import {
   currentBeadworkInfoAtom,
   currentThreadIdAtom,
@@ -9,10 +15,7 @@ import {
   threadsReceivedAtom,
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
-import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { patchThreadData } from '../../service/threadapi';
-import CustomInputModal from '../molecules/customInputModal';
+import { threadsMapSel, userInfoSel } from '../../recoilstore/seletors';
 
 export default function ThreadModifyModal() {
   const router = useRouter();
@@ -21,11 +24,14 @@ export default function ThreadModifyModal() {
     threadModifyModalAtom,
   );
   const [token, setToken] = useRecoilState(tokenInfoAtom);
+
   const setInputModal = useSetRecoilState(inputModalAtom);
   const setThreadsReceived = useSetRecoilState(threadsReceivedAtom);
+
   const currentThreadId = useRecoilValue(currentThreadIdAtom);
   const user = useRecoilValue(userInfoSel);
   const currentBeadworkData = useRecoilValue(currentBeadworkInfoAtom);
+  const threadsMapData = useRecoilValue(threadsMapSel);
 
   useEffect(() => {
     if (threadModifyModal) {
@@ -83,6 +89,7 @@ export default function ThreadModifyModal() {
       <CustomInputModal
         message="Input contents below to modify."
         name1="Contents"
+        defaultValue1={threadsMapData[currentThreadId]?.content}
         submitHandler={modifyThread}
         cancleHandler={() => {
           setThreadModifyModal(false);

@@ -5,7 +5,7 @@ import {
   beadShapeAtom,
   beadsReceivedAtom,
   exclusiveBeadsAtom,
-  mouseoverBeadIdAtom,
+  mouseoverElementIdAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
 } from './atoms';
@@ -128,13 +128,25 @@ const detailModalContentsSel = selector({
   key: `detailModalContentsSel/${v4()}`,
   get: ({ get }) => {
     const beadsMap = get(beadsMapSel);
-    const beadId = get(mouseoverBeadIdAtom);
+    const threadsMap = get(threadsMapSel);
 
-    if (beadId) {
+    const elementId = get(mouseoverElementIdAtom);
+
+    if (!elementId) {
+      return {};
+    }
+
+    if (beadsMap[elementId]) {
       return {
-        url: beadsMap[beadId]?.page.url,
-        title: beadsMap[beadId]?.page.title,
-        domain: beadsMap[beadId]?.page.domain,
+        url: beadsMap[elementId]?.page.url,
+        title: beadsMap[elementId]?.page.title,
+        domain: beadsMap[elementId]?.page.domain,
+      };
+    }
+
+    if (threadsMap[elementId]) {
+      return {
+        content: threadsMap[elementId].content,
       };
     }
 

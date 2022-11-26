@@ -9,6 +9,7 @@ const responseHandler = response => {
   if (response.status === 204) {
     return {
       result: 'ok',
+      data: 'none',
     };
   }
 

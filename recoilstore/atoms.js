@@ -21,8 +21,8 @@ const detailModalAtom = atom({
   default: false,
 });
 
-const mouseoverBeadPositionAtom = atom({
-  key: `mouseoverBeadPositionAtom/${v4()}`,
+const mouseoverElementPositionAtom = atom({
+  key: `mouseoverElementPositionAtom/${v4()}`,
   default: {},
 });
 
@@ -81,8 +81,8 @@ const currentThreadIdAtom = atom({
   default: '',
 });
 
-const mouseoverBeadIdAtom = atom({
-  key: `mouseoverBeadIdAtom/${v4()}`,
+const mouseoverElementIdAtom = atom({
+  key: `mouseoverElementIdAtom/${v4()}`,
   default: '',
 });
 
@@ -124,7 +124,7 @@ export {
   profileModalAtom,
   webViewModalAtom,
   detailModalAtom,
-  mouseoverBeadPositionAtom,
+  mouseoverElementPositionAtom,
   beadActionModalAtom,
   beadCreationModalAtom,
   threadModifyModalAtom,
@@ -136,7 +136,7 @@ export {
   beadShapeAtom,
   currentBeadIdAtom,
   currentThreadIdAtom,
-  mouseoverBeadIdAtom,
+  mouseoverElementIdAtom,
   currentBeadworkInfoAtom,
   addBeadButtonAtom,
   selectStartPointAtom,
