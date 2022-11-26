@@ -19,7 +19,7 @@ Message.propTypes = {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   width: 90%;
@@ -32,6 +32,7 @@ const Wrapper = styled.div`
   }
 
   .inner {
+    text-align: center;
     color: #0e2269;
   }
 `;

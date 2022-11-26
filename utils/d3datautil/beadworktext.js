@@ -28,7 +28,7 @@ const beadworkText = beadworkInfo => {
     .attr('x', 150)
     .attr('y', yStartPoint - 50)
     .attr('width', 300)
-    .attr('height', totalHeight + 50)
+    .attr('height', totalHeight + 90)
     .attr('rx', 10)
     .attr('fill', COLOR.pink)
     .attr('stroke', 'white')
@@ -42,6 +42,10 @@ const beadworkText = beadworkInfo => {
     .select('#beadworkContents')
     .append('text')
     .attr('id', 'textDescription');
+  const textAuthorInfo = d3
+    .select('#beadworkContents')
+    .append('text')
+    .attr('id', 'textAuthor');
 
   textTitle
     .selectAll('tspan')
@@ -59,6 +63,13 @@ const beadworkText = beadworkInfo => {
     .text(d => d)
     .attr('x', 180)
     .attr('y', (d, i) => yStartPoint + titleHeight + 20 * i);
+
+  textAuthorInfo
+    .text(`by ${beadworkInfo.author.username}`)
+    .attr('x', 180)
+    .attr('y', () => yStartPoint + totalHeight + 20)
+    .style('font-size', '0.8rem')
+    .style('fill', 'gray');
 
   return () => {
     d3.select('#beadworkContents').selectAll('*').remove();

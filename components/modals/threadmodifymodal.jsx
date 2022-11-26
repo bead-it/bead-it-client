@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import CustomInputModal from '../molecules/customInputModal';
@@ -42,7 +42,7 @@ export default function ThreadModifyModal() {
   const modifyThread = async content => {
     const { _id: beadworkId } = currentBeadworkData;
 
-    const newThreadData = await apiErrorHandler(
+    const patchedConfirm = await apiErrorHandler(
       async () => {
         const response = await patchThreadData(
           user.id,
@@ -60,7 +60,7 @@ export default function ThreadModifyModal() {
       { setToken, router },
     );
 
-    if (!newThreadData) {
+    if (!patchedConfirm) {
       return;
     }
 

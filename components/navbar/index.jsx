@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { useMediaQuery } from 'react-responsive';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { AiFillEdit as EditIcon } from 'react-icons/ai';
 
 import AddBeadworkButton from '../atoms/addbeadworkbutton';
 import ProfileIcon from '../atoms/profileicon';
@@ -14,7 +15,11 @@ import HomeButton from './homebutton';
 import { login } from '../../service/authapi';
 import refreshUser from '../../utils/authutil/refreshuser';
 
-import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+import {
+  beadworkModifyModalAtom,
+  deviceSizeAtom,
+  tokenInfoAtom,
+} from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
 
 export default function Navbar({ title }) {
@@ -26,6 +31,7 @@ export default function Navbar({ title }) {
     useRecoilState(deviceSizeAtom);
 
   const setToken = useSetRecoilState(tokenInfoAtom);
+  const setBeadworkModifyModal = useSetRecoilState(beadworkModifyModalAtom);
 
   const user = useRecoilValue(userInfoSel);
 
@@ -65,6 +71,12 @@ export default function Navbar({ title }) {
     <Wrapper>
       <LeftBuffer>
         <HomeButton />
+        <EditIconWrapper
+          active={router.query?.beadworkId}
+          onClick={() => setBeadworkModifyModal(true)}
+        >
+          <EditIcon size={24} />
+        </EditIconWrapper>
       </LeftBuffer>
       <Title>{title}</Title>
       <RightBuffer>
@@ -116,6 +128,27 @@ const LeftBuffer = styled.div`
 
   width: 25%;
   height: 100%;
+`;
+
+const EditIconWrapper = styled.div`
+  display: ${props => (props.active ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+
+  height: 30px;
+
+  padding-left: 5px;
+  padding-right: 5px;
+
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: #dec000;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
 
 const Title = styled.div`

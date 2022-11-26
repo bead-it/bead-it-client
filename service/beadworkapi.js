@@ -38,4 +38,20 @@ const postBeadworkDataFromBeads = async (
   });
 };
 
-export { getBeadworkData, postBeadworkData, postBeadworkDataFromBeads };
+const patchBeadworkData = async (userId, beadworkId, token, data) => {
+  return API({
+    method: 'patch',
+    url: `users/${userId}/beadworks/${beadworkId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data,
+  });
+};
+
+export {
+  getBeadworkData,
+  postBeadworkData,
+  postBeadworkDataFromBeads,
+  patchBeadworkData,
+};

@@ -14,7 +14,7 @@ export default function SharedWorks({ myData }) {
   return (
     <Wrapper>
       <h2>Shared beadworks list</h2>
-      <List>
+      <Ol>
         {myData &&
           myData.sharedBeadworks?.map(beadwork => {
             const { _id: beadworkId } = beadwork;
@@ -34,7 +34,7 @@ export default function SharedWorks({ myData }) {
               </Li>
             );
           })}
-      </List>
+      </Ol>
     </Wrapper>
   );
 }
@@ -56,7 +56,7 @@ const Wrapper = styled.div`
   padding-right: 5px;
 `;
 
-const List = styled.ol`
+const Ol = styled.ol`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -79,7 +79,7 @@ const Li = styled.li`
 
   &:hover {
     cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
   }
 `;

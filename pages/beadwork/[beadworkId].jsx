@@ -9,6 +9,7 @@ import WebViewModal from '../../components/modals/webviewmodal';
 import DetailModal from '../../components/modals/detailmodal';
 import BeadActionModal from '../../components/modals/beadactionmodal';
 import ThreadModifyModal from '../../components/modals/threadmodifymodal';
+import BeadworkModifyModal from '../../components/modals/beadworkmodifymodal';
 
 import apiErrorHandler from '../../service/apierrorhandler';
 import { getAllBeadsData } from '../../service/beadapi';
@@ -123,6 +124,7 @@ export default function Beadwork() {
       <DetailModal />
       <BeadActionModal />
       <ThreadModifyModal />
+      <BeadworkModifyModal />
     </Wrapper>
   );
 }
