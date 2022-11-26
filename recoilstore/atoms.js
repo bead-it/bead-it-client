@@ -41,6 +41,11 @@ const threadModifyModalAtom = atom({
   default: false,
 });
 
+const beadworkModifyModalAtom = atom({
+  key: `beadworkModifyModalAtom/${v4()}`,
+  default: false,
+});
+
 const inputModalAtom = atom({
   key: `inputModalAtom/${v4()}`,
   default: false,
@@ -91,6 +96,11 @@ const currentBeadworkInfoAtom = atom({
   default: null,
 });
 
+const myBeadworkInfoAtom = atom({
+  key: `myBeadworkInfoAtom/${v4()}`,
+  default: null,
+});
+
 const addBeadButtonAtom = atom({
   key: `addBeadButtonAtom/${v4()}`,
   default: false,
@@ -128,6 +138,7 @@ export {
   beadActionModalAtom,
   beadCreationModalAtom,
   threadModifyModalAtom,
+  beadworkModifyModalAtom,
   inputModalAtom,
   tokenInfoAtom,
   beadsReceivedAtom,
@@ -138,6 +149,7 @@ export {
   currentThreadIdAtom,
   mouseoverElementIdAtom,
   currentBeadworkInfoAtom,
+  myBeadworkInfoAtom,
   addBeadButtonAtom,
   selectStartPointAtom,
   selectedBeadsAtom,

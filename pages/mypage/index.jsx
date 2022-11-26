@@ -8,10 +8,15 @@ import UserInfo from '../../components/mypages/userinfo';
 import MyWorks from '../../components/mypages/myworks';
 import SharedWorks from '../../components/mypages/sharedworks';
 
-import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+import {
+  myBeadworkInfoAtom,
+  profileModalAtom,
+  tokenInfoAtom,
+} from '../../recoilstore/atoms';
 import apiErrorHandler from '../../service/apierrorhandler';
 import { getUserData } from '../../service/userapi';
 import { userInfoSel } from '../../recoilstore/seletors';
+import BeadworkModifyModal from '../../components/modals/beadworkmodifymodal';
 
 export default function Mypage() {
   const router = useRouter();
@@ -19,6 +24,7 @@ export default function Mypage() {
   const [token, setToken] = useRecoilState(tokenInfoAtom);
 
   const setProfileModal = useSetRecoilState(profileModalAtom);
+  const setMyBeadworkData = useSetRecoilState(myBeadworkInfoAtom);
 
   const currentUserData = useRecoilValue(userInfoSel);
 
@@ -40,6 +46,7 @@ export default function Mypage() {
 
       if (userData) {
         setMyData(userData);
+        setMyBeadworkData(userData.myBeadworks);
       }
     };
 
@@ -61,12 +68,13 @@ export default function Mypage() {
       </UserInfoWrapper>
       <Beadworks>
         <MyWorksWrapper>
-          <MyWorks myData={myData} />
+          <MyWorks />
         </MyWorksWrapper>
         <SharedWorksWrapper>
           <SharedWorks myData={myData} />
         </SharedWorksWrapper>
       </Beadworks>
+      <BeadworkModifyModal />
     </Wrapper>
   );
 }
