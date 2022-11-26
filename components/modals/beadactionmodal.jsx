@@ -110,4 +110,10 @@ const ButtonWrapper = styled.div`
   height: 100%;
   padding-left: 5px;
   padding-right: 5px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

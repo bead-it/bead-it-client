@@ -46,4 +46,10 @@ const Icon = styled.img`
   width: ${props => PROFILE_SIZE[props.size]}px;
   height: ${props => PROFILE_SIZE[props.size]}px;
   border-radius: ${props => PROFILE_SIZE[props.size] / 2}px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

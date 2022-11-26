@@ -17,6 +17,12 @@ const Wrapper = styled.div`
 
   padding-left: 10px;
   padding-right: 10px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
 
 CancleButton.propTypes = {

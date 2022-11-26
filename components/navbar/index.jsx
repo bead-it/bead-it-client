@@ -130,4 +130,10 @@ const RightBuffer = styled.div`
 const Login = styled.img`
   max-width: 90%;
   max-height: 90%;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

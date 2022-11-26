@@ -44,8 +44,8 @@ const tableTextDrawing = beadingGroupData => {
   Object.values(beadingGroupData).forEach(group => {
     d3.select(`#${group.id}`)
       .append('text')
-      .text(group.domain)
-      .attr('x', group.x + 50)
+      // .text(group.domain)
+      .attr('x', group.x - 45)
       .attr('y', group.y + 5);
   });
 

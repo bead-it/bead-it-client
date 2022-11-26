@@ -43,6 +43,7 @@ export default function DetailModal() {
   return (
     <Wrapper modalOpen={modalOpen} position={modalPosition}>
       <Title>{detailModalContents.title}</Title>
+      <Domain>{detailModalContents.domain}</Domain>
       <Url>{detailModalContents.url}</Url>
     </Wrapper>
   );
@@ -51,7 +52,7 @@ export default function DetailModal() {
 const Wrapper = styled.div`
   display: ${props => (props.modalOpen ? 'flex' : 'none')};
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 
   width: 20vw;
@@ -73,7 +74,19 @@ const Title = styled.div`
   align-items: center;
 
   width: 90%;
-  height: 50%;
+
+  font-weight: 500;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Domain = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 90%;
 
   font-weight: 500;
   word-break: break-all;
@@ -87,7 +100,6 @@ const Url = styled.div`
   align-items: center;
 
   width: 90%;
-  height: 50%;
 
   word-break: break-all;
   overflow: hidden;

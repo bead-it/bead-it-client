@@ -145,4 +145,10 @@ const Wrapper = styled.div`
   border: 1px solid black;
   border-radius: 5px;
   background-color: ${props => (props.active ? '#dec000' : 'gray')};
+
+  &:hover {
+    cursor: ${props => (props.active ? 'pointer' : 'arrow')};
+    transform: scale(${props => (props.active ? 1.1 : 1)});
+    transition: transform 0.3s ease-in-out;
+  }
 `;

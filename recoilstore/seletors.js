@@ -100,7 +100,7 @@ const userInfoSel = selector({
     if (newToken) {
       console.log('new token!!');
       try {
-        const user = jwt.verify(newToken, process.env.SECRET_KEY);
+        const user = jwt.verify(newToken, process.env.NEXT_PUBLIC_PUBLIC_KEY);
         return user;
       } catch (error) {
         console.error(error);
@@ -123,6 +123,7 @@ const detailModalContentsSel = selector({
       return {
         url: beadsMap[beadId]?.page.url,
         title: beadsMap[beadId]?.page.title,
+        domain: beadsMap[beadId]?.page.domain,
       };
     }
 

@@ -18,7 +18,8 @@ Message.propTypes = {
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
 
   width: 90%;

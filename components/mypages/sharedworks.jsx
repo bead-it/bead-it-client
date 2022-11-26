@@ -106,6 +106,12 @@ const Li = styled.li`
   @media (max-width: 1199px) {
     width: 70%;
   }
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
 
 const ListWrapper = styled.div`

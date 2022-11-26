@@ -93,4 +93,10 @@ const Wrapper = styled.div`
   border: 1px solid black;
   border-radius: 5px;
   background-color: #dec000;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;
