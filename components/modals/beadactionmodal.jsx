@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   AiOutlinePlusCircle as AddSelectIcon,
   AiOutlineMinusCircle as DeleteSelectIcon,
@@ -8,36 +8,38 @@ import {
 
 import {
   beadActionModalAtom,
-  mouseoverBeadIdAtom,
-  mouseoverBeadPositionAtom,
+  mouseoverElementIdAtom,
+  mouseoverElementPositionAtom,
   selectedBeadsAtom,
 } from '../../recoilstore/atoms';
 
 export default function BeadActionModal() {
   const [modalOpen, setModalOpen] = useRecoilState(beadActionModalAtom);
-  const mouseoverBeadPosition = useRecoilValue(mouseoverBeadPositionAtom);
-  const mouseoverBeadId = useRecoilValue(mouseoverBeadIdAtom);
   const [selectedBeads, setSelectedBeads] = useRecoilState(selectedBeadsAtom);
+
+  const mouseoverElementPosition = useRecoilValue(mouseoverElementPositionAtom);
+  const mouseoverElementId = useRecoilValue(mouseoverElementIdAtom);
+
   const [modalPosition, setModalPosition] = useState({});
 
   useEffect(() => {
     if (
-      mouseoverBeadPosition.y + mouseoverBeadPosition.height / 2 >
+      mouseoverElementPosition.y + mouseoverElementPosition.height / 2 >
       window.innerHeight / 2
     ) {
       setModalPosition({
-        x: mouseoverBeadPosition.x + mouseoverBeadPosition.width / 2,
-        y: mouseoverBeadPosition.y + mouseoverBeadPosition.height,
+        x: mouseoverElementPosition.x + mouseoverElementPosition.width / 2,
+        y: mouseoverElementPosition.y + mouseoverElementPosition.height,
         height: 35,
       });
     } else {
       setModalPosition({
-        x: mouseoverBeadPosition.x + mouseoverBeadPosition.width / 2,
-        y: mouseoverBeadPosition.y - 35,
+        x: mouseoverElementPosition.x + mouseoverElementPosition.width / 2,
+        y: mouseoverElementPosition.y - 35,
         height: 35,
       });
     }
-  }, [mouseoverBeadPosition]);
+  }, [mouseoverElementPosition]);
 
   const maintainModalOpen = e => {
     e.stopPropagation();
@@ -51,14 +53,14 @@ export default function BeadActionModal() {
 
   const selectHandler = e => {
     e.stopPropagation();
-    setSelectedBeads(prev => [...prev, mouseoverBeadId]);
+    setSelectedBeads(prev => [...prev, mouseoverElementId]);
   };
 
   const deSelectHandler = e => {
     e.stopPropagation();
     setSelectedBeads(prev => {
       const tempPrev = [...prev];
-      const index = tempPrev.indexOf(mouseoverBeadId);
+      const index = tempPrev.indexOf(mouseoverElementId);
       tempPrev.splice(index, 1);
       return tempPrev;
     });
@@ -71,7 +73,7 @@ export default function BeadActionModal() {
       onMouseOver={maintainModalOpen}
       onMouseOut={modalClose}
     >
-      {selectedBeads.includes(mouseoverBeadId) ? (
+      {selectedBeads.includes(mouseoverElementId) ? (
         <ButtonWrapper onClick={deSelectHandler}>
           <DeleteSelectIcon size={24} className="icon" />
         </ButtonWrapper>
@@ -110,4 +112,10 @@ const ButtonWrapper = styled.div`
   height: 100%;
   padding-left: 5px;
   padding-right: 5px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

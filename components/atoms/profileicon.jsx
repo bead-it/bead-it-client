@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useSetRecoilState } from 'recoil';
 
-import PROFILE_SIZE from '../../constants/profileicon';
 import { profileModalAtom } from '../../recoilstore/atoms';
+
+import PROFILE_SIZE from '../../constants/profileicon';
 
 const ProfileIcon = forwardRef(({ src, alt, size, option }, ref) => {
   const setModalOpen = useSetRecoilState(profileModalAtom);
@@ -46,4 +47,10 @@ const Icon = styled.img`
   width: ${props => PROFILE_SIZE[props.size]}px;
   height: ${props => PROFILE_SIZE[props.size]}px;
   border-radius: ${props => PROFILE_SIZE[props.size] / 2}px;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

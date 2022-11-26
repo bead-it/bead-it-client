@@ -18,6 +18,22 @@ import {
   mouseOverEvent,
   hightlightCurrentBead,
 } from '../../utils/d3datautil/event';
+
+import {
+  beadShapeAtom,
+  currentBeadIdAtom,
+  currentBeadworkInfoAtom,
+  detailModalAtom,
+  webViewModalAtom,
+  mouseoverElementPositionAtom,
+  beadActionModalAtom,
+  selectStartPointAtom,
+  mouseoverElementIdAtom,
+  selectedBeadsAtom,
+  exclusiveBeadsAtom,
+  threadModifyModalAtom,
+  currentThreadIdAtom,
+} from '../../recoilstore/atoms';
 import {
   beadingGroupSel,
   beadsGroupSel,
@@ -26,41 +42,31 @@ import {
 } from '../../recoilstore/seletors';
 
 import COLOR from '../../constants/colors';
-import {
-  beadShapeAtom,
-  currentBeadIdAtom,
-  currentBeadworkInfoAtom,
-  detailModalAtom,
-  webViewModalAtom,
-  mouseoverBeadPositionAtom,
-  beadActionModalAtom,
-  selectStartPointAtom,
-  mouseoverBeadIdAtom,
-  selectedBeadsAtom,
-  exclusiveBeadsAtom,
-  threadModifyModalAtom,
-  currentThreadIdAtom,
-} from '../../recoilstore/atoms';
 
 export default function BeadworkTable() {
+  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
+  const [selectStartPoint, setSelectStartPoint] =
+    useRecoilState(selectStartPointAtom);
+
   const beadsGroupData = useRecoilValue(beadsGroupSel);
   const beadingGroupData = useRecoilValue(beadingGroupSel);
   const beadsMap = useRecoilValue(beadsMapSel);
   const threadsGroup = useRecoilValue(threadsGroupSel);
-  const [currentBeadId, setCurrentBeadId] = useRecoilState(currentBeadIdAtom);
+
   const setCurrentThreadId = useSetRecoilState(currentThreadIdAtom);
   const setWebViewModal = useSetRecoilState(webViewModalAtom);
   const setDetailModal = useSetRecoilState(detailModalAtom);
-  const setMouseoverBeadId = useSetRecoilState(mouseoverBeadIdAtom);
-  const setMouseoverBeadPosition = useSetRecoilState(mouseoverBeadPositionAtom);
+  const setMouseoverElementId = useSetRecoilState(mouseoverElementIdAtom);
+  const setMouseoverElementPosition = useSetRecoilState(
+    mouseoverElementPositionAtom,
+  );
   const setBeadActionModal = useSetRecoilState(beadActionModalAtom);
   const setThreadModifyModal = useSetRecoilState(threadModifyModalAtom);
-  const [selectStartPoint, setSelectStartPoint] =
-    useRecoilState(selectStartPointAtom);
+  const setExclusiveBeads = useSetRecoilState(exclusiveBeadsAtom);
+
   const beadShape = useRecoilValue(beadShapeAtom);
   const beadworkInfo = useRecoilValue(currentBeadworkInfoAtom);
   const selectedBeads = useRecoilValue(selectedBeadsAtom);
-  const setExclusiveBeads = useSetRecoilState(exclusiveBeadsAtom);
 
   useEffect(() => {
     tableInit();
@@ -113,8 +119,9 @@ export default function BeadworkTable() {
     mouseOverEvent(
       setDetailModal,
       setBeadActionModal,
-      setMouseoverBeadPosition,
-      setMouseoverBeadId,
+      setMouseoverElementPosition,
+      setMouseoverElementId,
+      threadsGroup,
     );
   }, [beadsGroupData, beadShape, beadsMap, threadsGroup]);
 

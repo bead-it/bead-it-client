@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useRecoilValue } from 'recoil';
 
 import { inputModalAtom } from '../../recoilstore/atoms';
 
@@ -33,6 +33,8 @@ const Outer = styled.div`
 
   background-color: gray;
   opacity: 70%;
+
+  z-index: 10;
 `;
 
 const Inner = styled.div`
@@ -50,4 +52,6 @@ const Inner = styled.div`
   background-color: white;
   border: 1px solid black;
   border-radius: 5px;
+
+  z-index: 20;
 `;

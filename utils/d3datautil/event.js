@@ -40,11 +40,11 @@ const clickEvent = (
     .on('click', e => {
       e.stopPropagation();
 
-      const pathId = e.target.id;
+      const pathGroupId = e.target.id;
 
       let pathGroupThreads;
       threadsGroup.forEach(group => {
-        if (group.id === pathId) {
+        if (group.id === pathGroupId) {
           pathGroupThreads = group.threads;
         }
       });
@@ -62,8 +62,9 @@ const clickEvent = (
 const mouseOverEvent = (
   setDetailModal,
   setActionModal,
-  setMouseoverBeadPosition,
-  setMouseoverBeadId,
+  setMouseoverElementPosition,
+  setMouseoverElementId,
+  threadsGroup,
 ) => {
   d3.select('#topGroup')
     .selectAll('circle')
@@ -73,16 +74,18 @@ const mouseOverEvent = (
       const beadId = e.target.id.slice(4);
       const boundingRect = e.target.getBoundingClientRect();
 
-      setMouseoverBeadPosition({
+      setMouseoverElementPosition({
         x: boundingRect.left,
         y: boundingRect.top,
         width: boundingRect.width,
         height: boundingRect.height,
       });
 
-      setMouseoverBeadId(beadId);
+      setMouseoverElementId(beadId);
       setDetailModal(true);
       setActionModal(true);
+
+      d3.select(e.target).attr('cursor', 'pointer');
     });
 
   d3.select('#topGroup')
@@ -98,20 +101,46 @@ const mouseOverEvent = (
     .on('mouseover', e => {
       e.stopPropagation();
 
-      const pathId = e.target.id;
+      const pathGroupId = e.target.id;
 
-      d3.selectAll(`#${pathId}`).attr('stroke', `${COLOR.red}`);
+      d3.selectAll(`#${pathGroupId}`).attr('stroke', `${COLOR.red}`);
+      d3.select(e.target).attr('cursor', 'pointer');
+
+      let pathGroupThreads;
+      threadsGroup.forEach(group => {
+        if (group.id === pathGroupId) {
+          pathGroupThreads = group.threads;
+        }
+      });
+
+      if (pathGroupThreads.length > 1) {
+        return;
+      }
+
+      const boundingRect = e.target.getBoundingClientRect();
+
+      setMouseoverElementPosition({
+        x: boundingRect.left,
+        y: boundingRect.top,
+        width: boundingRect.width,
+        height: boundingRect.height,
+      });
+      setMouseoverElementId(pathGroupThreads[0]);
+      setDetailModal(true);
     });
 
   d3.select('#topGroup')
     .selectAll('path')
     .on('mouseout', e => {
       e.stopPropagation();
+      setDetailModal(false);
 
-      const pathId = e.target.id;
+      const pathGroupId = e.target.id;
 
-      d3.selectAll(`#${pathId}`).attr('stroke', `${COLOR.gray}`);
+      d3.selectAll(`#${pathGroupId}`).attr('stroke', `${COLOR.gray}`);
     });
+
+  d3.select('#beadworkContents').attr('cursor', 'pointer');
 };
 
 const hightlightCurrentBead = (
@@ -120,7 +149,7 @@ const hightlightCurrentBead = (
   selectedBeads,
 ) => {
   if (selectStartPoint) {
-    d3.select('#beadworkContents').select('rect').attr('stroke-width', 10);
+    d3.select('#beadworkContents').select('rect').attr('stroke', 'orange');
   }
 
   if (selectedBeads.length > 0) {
@@ -142,7 +171,7 @@ const hightlightCurrentBead = (
       d3.select(`#bead${currentBeadId}`).attr('stroke-width', 4);
     }
     if (selectStartPoint) {
-      d3.select('#beadworkContents').select('rect').attr('stroke-width', 4);
+      d3.select('#beadworkContents').select('rect').attr('stroke', 'white');
     }
     if (selectedBeads.length > 0) {
       selectedBeads.forEach(beadId => {

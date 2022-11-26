@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
 import { logout } from '../../service/authapi';
 import refreshUser from '../../utils/authutil/refreshuser';
 
+import { profileModalAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+
 export default function ProfileModal({ profileIconRef }) {
   const router = useRouter();
-  const modalOpen = useRecoilValue(profileModalAtom);
-  const [position, setPosition] = useState({});
+
   const setToken = useSetRecoilState(tokenInfoAtom);
+
+  const modalOpen = useRecoilValue(profileModalAtom);
+
+  const [position, setPosition] = useState({});
 
   useEffect(() => {
     if (profileIconRef && profileIconRef.current) {
@@ -37,7 +41,7 @@ export default function ProfileModal({ profileIconRef }) {
 
   const toMyPage = e => {
     e.stopPropagation();
-    router.push('/mypage');
+    router.push('/mypage', '123');
   };
 
   return (

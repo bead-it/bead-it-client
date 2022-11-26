@@ -7,6 +7,14 @@ import Navbar from '../../components/navbar';
 import BeadworkTable from '../../components/beadworktable';
 import WebViewModal from '../../components/modals/webviewmodal';
 import DetailModal from '../../components/modals/detailmodal';
+import BeadActionModal from '../../components/modals/beadactionmodal';
+import ThreadModifyModal from '../../components/modals/threadmodifymodal';
+
+import apiErrorHandler from '../../service/apierrorhandler';
+import { getAllBeadsData } from '../../service/beadapi';
+import { getAllThreadsData } from '../../service/threadapi';
+import { getBeadworkData } from '../../service/beadworkapi';
+
 import {
   beadsReceivedAtom,
   currentBeadIdAtom,
@@ -18,14 +26,12 @@ import {
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
 import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { getAllBeadsData } from '../../service/beadapi';
-import { getAllThreadsData } from '../../service/threadapi';
-import { getBeadworkData } from '../../service/beadworkapi';
-import BeadActionModal from '../../components/modals/beadactionmodal';
-import ThreadModifyModal from '../../components/modals/threadmodifymodal';
 
 export default function Beadwork() {
+  const router = useRouter();
+
+  const [token, setToken] = useRecoilState(tokenInfoAtom);
+
   const setProfileModal = useSetRecoilState(profileModalAtom);
   const setWebViewModal = useSetRecoilState(webViewModalAtom);
   const setBeadsReceived = useSetRecoilState(beadsReceivedAtom);
@@ -34,11 +40,9 @@ export default function Beadwork() {
   const setCurrentBeadworkInfo = useSetRecoilState(currentBeadworkInfoAtom);
   const setSelectStartPoint = useSetRecoilState(selectStartPointAtom);
 
-  const [token, setToken] = useRecoilState(tokenInfoAtom);
   const user = useRecoilValue(userInfoSel);
   const userId = user.id;
 
-  const router = useRouter();
   const { beadworkId } = router.query;
 
   useEffect(() => {
@@ -50,12 +54,10 @@ export default function Beadwork() {
             return response;
           },
           errorResult => {
-            if (process.env.NODE_ENV === 'development') {
-              window.alert(errorResult.message);
-            }
+            window.alert(errorResult.message);
             return null;
           },
-          { setToken },
+          { setToken, router },
         );
 
         if (beadworkData) {
@@ -76,12 +78,10 @@ export default function Beadwork() {
             return response;
           },
           errorResult => {
-            if (process.env.NODE_ENV === 'development') {
-              window.alert(errorResult.message);
-            }
+            window.alert(errorResult.message);
             return null;
           },
-          { setToken },
+          { setToken, router },
         );
         const threadsData = await apiErrorHandler(
           async () => {
@@ -89,12 +89,10 @@ export default function Beadwork() {
             return response;
           },
           errorResult => {
-            if (process.env.NODE_ENV === 'development') {
-              window.alert(errorResult.message);
-            }
+            window.alert(errorResult.message);
             return null;
           },
-          { setToken },
+          { setToken, router },
         );
 
         if (beadsData) {

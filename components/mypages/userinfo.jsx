@@ -1,55 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React from 'react';
 import styled from 'styled-components';
-import { tokenInfoAtom } from '../../recoilstore/atoms';
-import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { getUserData } from '../../service/userapi';
+import PropTypes from 'prop-types';
+
 import ProfileIcon from '../atoms/profileicon';
 
-export default function UserInfo() {
-  const currentUserData = useRecoilValue(userInfoSel);
-  const [token, setToken] = useRecoilState(tokenInfoAtom);
-  const [myData, setMyData] = useState({});
-
-  useEffect(() => {
-    const getUserInfoFetching = async () => {
-      const userData = await apiErrorHandler(
-        async () => {
-          const response = await getUserData(currentUserData.id, token);
-          return response;
-        },
-        errorResult => {
-          if (process.env.NODE_ENV === 'development') {
-            window.alert(errorResult.message);
-          }
-          return null;
-        },
-        { setToken },
-      );
-
-      if (userData) {
-        setMyData(userData);
-      }
-    };
-
-    if (currentUserData && token) {
-      getUserInfoFetching();
-    }
-  }, [currentUserData, token]);
-
+export default function UserInfo({ myData }) {
   return (
     <Wrapper>
       <FlexDiv>
         <ProfileIcon
-          src={currentUserData.profile}
+          src={myData.profile}
           alt="profile image"
           size="medium"
           option={{ clickable: false }}
         />
-        <Username>{currentUserData.username}</Username>
+        <Username>{myData.username}</Username>
       </FlexDiv>
-      <Email>{currentUserData.email}</Email>
+      <Email>{myData.email}</Email>
       <JoinDate>{`Created at : ${myData.createdAt?.split('T')[0]}`}</JoinDate>
       <BeadworksCount>
         {`Number of myBeadworks : ${myData.myBeadworks?.length || 0}`}
@@ -60,6 +27,10 @@ export default function UserInfo() {
     </Wrapper>
   );
 }
+
+UserInfo.propTypes = {
+  myData: PropTypes.object.isRequired,
+};
 
 const Wrapper = styled.div`
   display: flex;

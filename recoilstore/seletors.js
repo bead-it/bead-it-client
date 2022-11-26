@@ -5,7 +5,7 @@ import {
   beadShapeAtom,
   beadsReceivedAtom,
   exclusiveBeadsAtom,
-  mouseoverBeadIdAtom,
+  mouseoverElementIdAtom,
   threadsReceivedAtom,
   tokenInfoAtom,
 } from './atoms';
@@ -95,19 +95,30 @@ const userInfoSel = selector({
   key: `userInfoSel/${v4()}`,
   get: ({ get }) => {
     const newToken = get(tokenInfoAtom);
-    console.log('refresh token!!');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('refresh token!!');
+    }
 
     if (newToken) {
-      console.log('new token!!');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('new token!!');
+      }
       try {
-        const user = jwt.verify(newToken, process.env.SECRET_KEY);
+        const user = jwt.verify(newToken, process.env.NEXT_PUBLIC_PUBLIC_KEY);
         return user;
       } catch (error) {
-        console.error(error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error(error);
+        }
+        window.alert(
+          'Your authentication has expired!! Please sign in first!!',
+        );
         return {};
       }
     } else {
-      console.log('no token!!');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('no token!!');
+      }
       return {};
     }
   },
@@ -117,12 +128,25 @@ const detailModalContentsSel = selector({
   key: `detailModalContentsSel/${v4()}`,
   get: ({ get }) => {
     const beadsMap = get(beadsMapSel);
-    const beadId = get(mouseoverBeadIdAtom);
+    const threadsMap = get(threadsMapSel);
 
-    if (beadId) {
+    const elementId = get(mouseoverElementIdAtom);
+
+    if (!elementId) {
+      return {};
+    }
+
+    if (beadsMap[elementId]) {
       return {
-        url: beadsMap[beadId]?.page.url,
-        title: beadsMap[beadId]?.page.title,
+        url: beadsMap[elementId]?.page.url,
+        title: beadsMap[elementId]?.page.title,
+        domain: beadsMap[elementId]?.page.domain,
+      };
+    }
+
+    if (threadsMap[elementId]) {
+      return {
+        content: threadsMap[elementId].content,
       };
     }
 

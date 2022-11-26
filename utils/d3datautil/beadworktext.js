@@ -30,9 +30,9 @@ const beadworkText = beadworkInfo => {
     .attr('width', 300)
     .attr('height', totalHeight + 50)
     .attr('rx', 10)
-    .attr('fill', COLOR.gray)
+    .attr('fill', COLOR.pink)
     .attr('stroke', 'white')
-    .attr('stroke-width', 4);
+    .attr('stroke-width', 10);
 
   const textTitle = d3
     .select('#beadworkContents')

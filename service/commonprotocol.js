@@ -9,26 +9,26 @@ const responseHandler = response => {
   if (response.status === 204) {
     return {
       result: 'ok',
+      data: 'none',
     };
   }
 
-  const received = response.data;
-  return received;
+  return response.data;
 };
 
 const errorHandler = error => {
+  let received;
   if (error.response) {
-    const received = error.response.data;
-
-    return received;
+    received = error.response.data;
+  } else {
+    received = {
+      result: 'error',
+      message: error.message,
+      code: error.code,
+    };
   }
 
-  const response = {
-    result: 'error',
-    error,
-  };
-
-  return response;
+  return received;
 };
 
 API.interceptors.response.use(responseHandler, errorHandler);

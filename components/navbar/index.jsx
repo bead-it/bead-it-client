@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { useMediaQuery } from 'react-responsive';
-
 import { useRouter } from 'next/router';
+import { useMediaQuery } from 'react-responsive';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import AddBeadworkButton from '../atoms/addbeadworkbutton';
 import ProfileIcon from '../atoms/profileicon';
+import AddBeadButton from '../molecules/addbeadbutton';
 import ProfileModal from '../modals/profilemodal';
-import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
-import { userInfoSel } from '../../recoilstore/seletors';
+import HomeButton from './homebutton';
+
 import { login } from '../../service/authapi';
 import refreshUser from '../../utils/authutil/refreshuser';
-import AddBeadButton from '../molecules/addbeadbutton';
-import HomeButton from './homebutton';
-import AddBeadworkButton from '../atoms/addbeadworkbutton';
+
+import { deviceSizeAtom, tokenInfoAtom } from '../../recoilstore/atoms';
+import { userInfoSel } from '../../recoilstore/seletors';
 
 export default function Navbar({ title }) {
   const router = useRouter();
@@ -22,8 +24,11 @@ export default function Navbar({ title }) {
 
   const [deviceWindowSize, setDeviceWindowSize] =
     useRecoilState(deviceSizeAtom);
+
   const setToken = useSetRecoilState(tokenInfoAtom);
+
   const user = useRecoilValue(userInfoSel);
+
   const [loginUrl, setLoginUrl] = useState(
     `/images/google-signin-${deviceWindowSize}.png`,
   );
@@ -47,7 +52,7 @@ export default function Navbar({ title }) {
   }, [deviceWindowSize]);
 
   const loginHandler = async () => {
-    const loginResult = await login();
+    const loginResult = await login(router);
 
     refreshUser(setToken);
 
@@ -130,4 +135,10 @@ const RightBuffer = styled.div`
 const Login = styled.img`
   max-width: 90%;
   max-height: 90%;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+  }
 `;

@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import { RecoilRoot } from 'recoil';
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import { RecoilRoot } from 'recoil';
 
 import GlobalStyle from '../components/styles/globalstyle';
 import RefreshUser from '../components/refreshuser';
+
 import throttle from '../utils/throttle';
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
   const [refreshUserToggle, setRefreshUserToggle] = useState(false);
+
+  useEffect(() => {
+    const intervalRefresh = () => {
+      setRefreshUserToggle(true);
+
+      setTimeout(intervalRefresh, 1800000);
+    };
+
+    intervalRefresh();
+  }, []);
 
   useEffect(() => {
     if (refreshUserToggle) {
@@ -17,24 +31,14 @@ function MyApp({ Component, pageProps }) {
     }
   }, [refreshUserToggle]);
 
-  useEffect(() => {
-    const doIntervalRefresh = () => {
-      setRefreshUserToggle(true);
-
-      setTimeout(doIntervalRefresh, 1800000);
-    };
-
-    doIntervalRefresh();
-  }, []);
-
-  const refreshHandler = () => {
+  const mouseRefreshHandler = () => {
     throttle(() => {
       setRefreshUserToggle(true);
     }, 600000);
   };
 
   return (
-    <GlobalEvent onMouseMove={refreshHandler}>
+    <GlobalEvent onMouseMove={mouseRefreshHandler}>
       <RecoilRoot>
         <Head>
           <title>비딧</title>
@@ -56,7 +60,7 @@ function MyApp({ Component, pageProps }) {
           <meta name="viewport" content="width=device-width,initial-scale=1" />
         </Head>
         <GlobalStyle />
-        <Component {...pageProps} />
+        <Component key={router.asPath} {...pageProps} />
         {refreshUserToggle && <RefreshUser />}
       </RecoilRoot>
     </GlobalEvent>

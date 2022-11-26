@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useSetRecoilState } from 'recoil';
 
-import { inputModalAtom } from '../../recoilstore/atoms';
 import CancleButton from '../atoms/canclebutton';
 import Input from '../atoms/input';
 import Message from '../atoms/message';
 import SubmitButton from '../atoms/submitbutton';
 import InputModal from '../modals/inputmodal';
+
+import { inputModalAtom } from '../../recoilstore/atoms';
 
 export default function CustomInputModal({
   message,
@@ -19,9 +20,10 @@ export default function CustomInputModal({
   submitHandler,
   cancleHandler,
 }) {
+  const setInputModal = useSetRecoilState(inputModalAtom);
+
   const [input1, setInput1] = useState(defaultValue1);
   const [input2, setInput2] = useState(defaultValue2);
-  const setInputModal = useSetRecoilState(inputModalAtom);
 
   return (
     <InputModal>

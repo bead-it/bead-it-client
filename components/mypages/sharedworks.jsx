@@ -1,44 +1,10 @@
-import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React from 'react';
 import styled from 'styled-components';
-import { tokenInfoAtom } from '../../recoilstore/atoms';
-import { userInfoSel } from '../../recoilstore/seletors';
-import apiErrorHandler from '../../service/apierrorhandler';
-import { getUserData } from '../../service/userapi';
+import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
-export default function SharedWorks() {
-  const currentUserData = useRecoilValue(userInfoSel);
-  const [token, setToken] = useRecoilState(tokenInfoAtom);
-  const [myData, setMyData] = useState({});
-
+export default function SharedWorks({ myData }) {
   const router = useRouter();
-
-  useEffect(() => {
-    const getUserInfoFetching = async () => {
-      const userData = await apiErrorHandler(
-        async () => {
-          const response = await getUserData(currentUserData.id, token);
-          return response;
-        },
-        errorResult => {
-          if (process.env.NODE_ENV === 'development') {
-            window.alert(errorResult.message);
-          }
-          return null;
-        },
-        { setToken },
-      );
-
-      if (userData) {
-        setMyData(userData);
-      }
-    };
-
-    if (currentUserData && token) {
-      getUserInfoFetching();
-    }
-  }, [currentUserData, token]);
 
   const toBeadworkPage = (e, beadworkId) => {
     e.stopPropagation();
@@ -73,6 +39,10 @@ export default function SharedWorks() {
   );
 }
 
+SharedWorks.propTypes = {
+  myData: PropTypes.object.isRequired,
+};
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -105,6 +75,12 @@ const Li = styled.li`
 
   @media (max-width: 1199px) {
     width: 70%;
+  }
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
   }
 `;
 
