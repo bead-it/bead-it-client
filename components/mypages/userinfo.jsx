@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -8,6 +9,8 @@ import { getUserData } from '../../service/userapi';
 import ProfileIcon from '../atoms/profileicon';
 
 export default function UserInfo() {
+  const router = useRouter();
+
   const currentUserData = useRecoilValue(userInfoSel);
   const [token, setToken] = useRecoilState(tokenInfoAtom);
   const [myData, setMyData] = useState({});
@@ -20,12 +23,10 @@ export default function UserInfo() {
           return response;
         },
         errorResult => {
-          if (process.env.NODE_ENV === 'development') {
-            window.alert(errorResult.message);
-          }
+          window.alert(errorResult.message);
           return null;
         },
-        { setToken },
+        { setToken, router },
       );
 
       if (userData) {

@@ -47,7 +47,7 @@ export default function Navbar({ title }) {
   }, [deviceWindowSize]);
 
   const loginHandler = async () => {
-    const loginResult = await login();
+    const loginResult = await login(router);
 
     refreshUser(setToken);
 

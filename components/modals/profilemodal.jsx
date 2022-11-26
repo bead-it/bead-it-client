@@ -37,7 +37,7 @@ export default function ProfileModal({ profileIconRef }) {
 
   const toMyPage = e => {
     e.stopPropagation();
-    router.push('/mypage');
+    router.push('/mypage', '123');
   };
 
   return (

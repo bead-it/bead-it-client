@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AiFillPlusCircle as CreateIcon } from 'react-icons/ai';
 
+import { useRouter } from 'next/router';
 import {
   beadCreationModalAtom,
   beadsReceivedAtom,
@@ -21,6 +22,8 @@ import { postThreadData } from '../../service/threadapi';
 import CustomInputModal from './customInputModal';
 
 export default function AddBeadButton() {
+  const router = useRouter();
+
   const setInputModal = useSetRecoilState(inputModalAtom);
   const user = useRecoilValue(userInfoSel);
   const beadwork = useRecoilValue(currentBeadworkInfoAtom);
@@ -56,13 +59,12 @@ export default function AddBeadButton() {
         return response;
       },
       errorResult => {
-        if (process.env.NODE_ENV === 'development') {
-          window.alert(errorResult.message);
-        }
+        window.alert(errorResult.message);
         return null;
       },
-      { setToken },
+      { setToken, router },
     );
+
     if (!newBeadData) {
       return;
     }
@@ -88,13 +90,12 @@ export default function AddBeadButton() {
         return response;
       },
       errorResult => {
-        if (process.env.NODE_ENV === 'development') {
-          window.alert(errorResult.message);
-        }
+        window.alert(errorResult.message);
         return null;
       },
-      { setToken },
+      { setToken, router },
     );
+
     if (!newThreadData) {
       return;
     }

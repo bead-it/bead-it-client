@@ -9,6 +9,7 @@ import {
   AiFillCaretRight as GoForwardIcon,
 } from 'react-icons/ai';
 
+import { useRouter } from 'next/router';
 import {
   currentBeadIdAtom,
   currentSrcAtom,
@@ -22,6 +23,8 @@ import replaceRefs from '../../utils/previewpage/replacerefs';
 import findUrlToGo from '../../utils/previewpage/findurltogo';
 
 export default function WebViewModal() {
+  const router = useRouter();
+
   const modalOpen = useRecoilValue(webViewModalAtom);
   const beadId = useRecoilValue(currentBeadIdAtom);
   const beadsMap = useRecoilValue(beadsMapSel);
@@ -64,12 +67,15 @@ export default function WebViewModal() {
             return response;
           },
           errorResult => {
-            if (process.env.NODE_ENV === 'development') {
-              window.alert(errorResult.error);
-            }
+            window.alert(errorResult.message);
             return null;
           },
+          { router },
         );
+
+        if (!originalHtml) {
+          return;
+        }
 
         const protocol = src.split(':')[0];
         const domain = src.split('/')[2];
@@ -113,8 +119,6 @@ export default function WebViewModal() {
     } else if (searchPortal === 'naver') {
       setSearchPrefix('https://search.naver.com/search.naver?query=');
     }
-
-    console.log(searchPortal);
   }, [searchPortal]);
 
   const expandModal = e => {

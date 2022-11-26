@@ -1,11 +1,10 @@
-import jwt from 'jsonwebtoken';
 import { deleteCookie, setCookie } from 'cookies-next';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import API from './commonprotocol';
 import apiErrorHandler from './apierrorhandler';
 
-const login = async () => {
+const login = async router => {
   try {
     const provider = new GoogleAuthProvider();
 
@@ -28,11 +27,10 @@ const login = async () => {
         return response;
       },
       errorResult => {
-        if (process.env.NODE_ENV === 'development') {
-          window.alert(errorResult.message);
-        }
+        window.alert(errorResult.message);
         return null;
       },
+      { router },
     );
 
     if (!loginResponse) {
@@ -40,18 +38,21 @@ const login = async () => {
     }
 
     const { beaditToken } = loginResponse;
-    const user = jwt.verify(beaditToken, process.env.NEXT_PUBLIC_PUBLIC_KEY);
 
-    console.log('token?? : ', beaditToken);
     setCookie('beaditToken', beaditToken, { secure: false });
-
-    console.log(beaditToken, user);
 
     return true;
   } catch (error) {
-    error.message = `Error in LOGIN process${
-      process.env.NODE_ENV === 'development' ? ` : ${error.message}` : ''
-    }.`;
+    if (process.env.NODE_ENV !== 'development') {
+      router.push({
+        pathname: '/error',
+        query: { errorStatus: 500 },
+      });
+
+      return false;
+    }
+
+    error.message = `Error in LOGIN process : ${error.message}`;
     error.status = 500;
     console.error(error);
 

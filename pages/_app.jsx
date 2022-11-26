@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { RecoilRoot } from 'recoil';
 import PropTypes from 'prop-types';
 
@@ -9,6 +10,7 @@ import RefreshUser from '../components/refreshuser';
 import throttle from '../utils/throttle';
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const [refreshUserToggle, setRefreshUserToggle] = useState(false);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ function MyApp({ Component, pageProps }) {
           <meta name="viewport" content="width=device-width,initial-scale=1" />
         </Head>
         <GlobalStyle />
-        <Component {...pageProps} />
+        <Component key={router.asPath} {...pageProps} />
         {refreshUserToggle && <RefreshUser />}
       </RecoilRoot>
     </GlobalEvent>

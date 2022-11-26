@@ -22,8 +22,6 @@ const postBeadData = async (userId, beadworkId, token, url) => {
   const title = targetUrlData.split(/<\/?title>/g)[1] || 'untitled';
   const keywords = [];
 
-  console.log(url, domain, title, keywords);
-
   return API({
     method: 'post',
     url: `/users/${userId}/beadworks/${beadworkId}/beads`,

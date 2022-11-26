@@ -22,12 +22,10 @@ export default function SharedWorks() {
           return response;
         },
         errorResult => {
-          if (process.env.NODE_ENV === 'development') {
-            window.alert(errorResult.message);
-          }
+          window.alert(errorResult.message);
           return null;
         },
-        { setToken },
+        { setToken, router },
       );
 
       if (userData) {

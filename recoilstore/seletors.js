@@ -95,19 +95,30 @@ const userInfoSel = selector({
   key: `userInfoSel/${v4()}`,
   get: ({ get }) => {
     const newToken = get(tokenInfoAtom);
-    console.log('refresh token!!');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('refresh token!!');
+    }
 
     if (newToken) {
-      console.log('new token!!');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('new token!!');
+      }
       try {
         const user = jwt.verify(newToken, process.env.NEXT_PUBLIC_PUBLIC_KEY);
         return user;
       } catch (error) {
-        console.error(error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error(error);
+        }
+        window.alert(
+          'Your authentication has expired!! Please sign in first!!',
+        );
         return {};
       }
     } else {
-      console.log('no token!!');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('no token!!');
+      }
       return {};
     }
   },

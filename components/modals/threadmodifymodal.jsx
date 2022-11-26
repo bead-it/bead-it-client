@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
@@ -14,6 +15,8 @@ import { patchThreadData } from '../../service/threadapi';
 import CustomInputModal from '../molecules/customInputModal';
 
 export default function ThreadModifyModal() {
+  const router = useRouter();
+
   const [threadModifyModal, setThreadModifyModal] = useRecoilState(
     threadModifyModalAtom,
   );
@@ -45,13 +48,12 @@ export default function ThreadModifyModal() {
         return response;
       },
       errorResult => {
-        if (process.env.NODE_ENV === 'development') {
-          window.alert(errorResult.message);
-        }
+        window.alert(errorResult.message);
         return null;
       },
-      { setToken },
+      { setToken, router },
     );
+
     if (!newThreadData) {
       return;
     }

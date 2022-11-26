@@ -8,6 +8,9 @@ const apiErrorHandler = async (
 ) => {
   try {
     const apiExecResult = await apiExecFunc();
+    if (apiExecResult.result === 'ok') {
+      return apiExecResult.data;
+    }
 
     if (apiExecResult.result === 'error') {
       if (apiExecResult.code === 401) {
@@ -23,18 +26,32 @@ const apiErrorHandler = async (
         refreshUser(helperFuncs.setToken);
       }
 
-      if (errorCallback) {
+      if (errorCallback && process.env.NODE_ENV === 'development') {
         return errorCallback(apiExecResult);
       }
 
-      return apiExecResult;
+      helperFuncs.router.push({
+        pathname: '/error',
+        query: {
+          errorStatus: apiExecResult.code === 404 ? 404 : 500,
+        },
+      });
+
+      return null;
     }
 
-    return apiExecResult.data;
+    throw new Error('Unspecified error.');
   } catch (error) {
-    error.message = `Error in SERVER request${
-      process.env.NODE_ENV === 'development' ? ` : ${error.message}` : ''
-    }.`;
+    if (process.env.NODE_ENV !== 'development') {
+      helperFuncs.router.push({
+        pathname: '/error',
+        query: { errorStatus: 500 },
+      });
+
+      return null;
+    }
+
+    error.message = `Error in SERVER request : ${error.message}`;
     error.status = 500;
     console.error(error);
 
