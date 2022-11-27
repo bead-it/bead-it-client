@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { AiFillFileAdd as CreateIcon } from 'react-icons/ai';
 
 import apiErrorHandler from '../../service/apierrorhandler';
@@ -12,6 +12,7 @@ import {
 
 import {
   currentBeadworkInfoAtom,
+  myBeadworkInfoAtom,
   selectedBeadsAtom,
   tokenInfoAtom,
 } from '../../recoilstore/atoms';
@@ -22,9 +23,13 @@ export default function AddBeadworkButton() {
 
   const [selectedBeads, setSelectedBeads] = useRecoilState(selectedBeadsAtom);
   const [token, setToken] = useRecoilState(tokenInfoAtom);
+  const [currentBeadworkData, setCurrentBeadworkData] = useRecoilState(
+    currentBeadworkInfoAtom,
+  );
+
+  const setMyBeadworkData = useSetRecoilState(myBeadworkInfoAtom);
 
   const user = useRecoilValue(userInfoSel);
-  const currentBeadworkData = useRecoilValue(currentBeadworkInfoAtom);
 
   const createBeadwork = async e => {
     e.stopPropagation();
@@ -68,6 +73,8 @@ export default function AddBeadworkButton() {
       const { _id: newBeadworkId } = newBeadworkData;
 
       setSelectedBeads([]);
+      setCurrentBeadworkData(newBeadworkData);
+      setMyBeadworkData(prev => [...prev, newBeadworkData]);
 
       router.push(`/beadwork/${newBeadworkId}`);
     }
