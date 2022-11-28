@@ -8,7 +8,7 @@
 
 # 배포
 
-배포 준비 중
+https://www.beadit.site/beadwork/63842c9c47ce7d0ec0bdfbfb
 
 # Bead It !!
 
