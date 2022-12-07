@@ -13,6 +13,7 @@ const getPageData = async src => {
       'Content-Type': 'application/json;charset=UTF-8',
       'Access-Control-Allow-Origin': '*',
     },
+    timeout: 5000,
   });
 
   if (response.result === 'error') {

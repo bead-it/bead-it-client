@@ -104,7 +104,10 @@ const userInfoSel = selector({
         console.log('new token!!');
       }
       try {
-        const user = jwt.verify(newToken, process.env.NEXT_PUBLIC_PUBLIC_KEY);
+        const user = jwt.verify(
+          newToken,
+          `-----BEGIN PUBLIC KEY-----\n${process.env.NEXT_PUBLIC_PUBLIC_KEY}\n-----END PUBLIC KEY-----`,
+        );
         return user;
       } catch (error) {
         if (process.env.NODE_ENV === 'development') {

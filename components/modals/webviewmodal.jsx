@@ -89,6 +89,18 @@ export default function WebViewModal() {
     }
   }, [src]);
 
+  // useEffect(() => {
+  //   if (injectedHtml) {
+  //     const upperShadow = document.querySelector('.webframe');
+  //     const shadowRoot = document.createElement('div');
+  //     const shadow = shadowRoot.attachShadow({ mode: 'open' });
+
+  //     shadow.innerHTML = injectedHtml;
+
+  //     upperShadow.replaceChildren(shadowRoot);
+  //   }
+  // }, [injectedHtml]);
+
   useEffect(() => {
     const documents = document.querySelectorAll('a');
     const callback = e => {
@@ -355,4 +367,6 @@ const Webframe = styled.div`
 
   overflow-y: scroll;
   object-fit: contain;
+
+  transform: translateZ(0);
 `;
