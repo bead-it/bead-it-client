@@ -74,6 +74,8 @@ export default function BeadworkModifyModal() {
       let index;
       let newBeadwork;
 
+      console.log(prev);
+
       prev.forEach((beadwork, i) => {
         const { _id: beadworkId } = beadwork;
         if (beadworkId === currentBeadworkId) {
@@ -81,6 +83,11 @@ export default function BeadworkModifyModal() {
           newBeadwork = { ...beadwork, title, description };
         }
       });
+
+      if (!index) {
+        console.error('No matched beadworkId in current beadworks data.');
+        return prev;
+      }
 
       return [...prev.slice(0, index), newBeadwork, ...prev.slice(index + 1)];
     });
